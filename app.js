@@ -1,4 +1,5 @@
 var express = require('express');
+var mysql = require("mysql");
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -33,6 +34,21 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
+var connection = mysql.createConnection({
+  host  : 'localhost'
+  user  : 'shayan'
+  password  : 'shayan123'
+  database  : 'my_db'
+})
+
+connection.connect(function(err){
+  if(err){
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
+  console.log('connected as id: ' + connection.threadid);
+})
 
 // error handler
 app.use(function(err, req, res, next) {
