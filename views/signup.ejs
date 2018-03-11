@@ -9,32 +9,32 @@
         
 
          <hr>
-        <form id="signup-form">
+        <form id="signup-form" method="POST" action="/signup">
           
           <div class="form-group">
             <div class="row">
               <div class="col-6">
                 
-                <input type="text" class="form-control" id="fname" aria-describedby="fname" placeholder="Enter First Name">
+                <input type="text" class="form-control" id="fname" aria-describedby="fname" placeholder="Enter First Name" name="fname">
               </div>
               <div class="col-6">
                 
-                <input type="text" class="form-control" id="lname" aria-describedby="lname" placeholder="Enter Last Name">
+                <input type="text" class="form-control" id="lname" aria-describedby="lname" placeholder="Enter Last Name" name="lname">
               </div>
             </div>
           </div>
           <div class="form-group">
             
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email">
           </div>
           <div class="form-group">
             
-            <input type="password" class="form-control" id="InputPassword1" placeholder="Password">
+            <input type="password" class="form-control" id="InputPassword1" placeholder="Password" name="password">
           </div>
 
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Department</label>
-                  <select class="form-control col-sm" id="exampleFormControlSelect1">
+                  <select class="form-control col-sm" id="exampleFormControlSelect1" name="dept">
                     <option>Computer Science</option>
                     <option>Mechanical Engineering</option>
                     <option>Electrical Engineering</option>
@@ -50,15 +50,15 @@
                     <div class="input-group">
                         <span class="input-group-btn">
                             <span class="btn btn-file">
-                                Browse <input type="file" id="imgInp">
+                                Browse <input type="file" id="imgInp" name="pic">
                             </span>
                         </span>
                         <input type="text" class="form-control" readonly>
                     </div>
             </div>
             <div class="form-check form-check-inline">
-                <label class="radio-inline"><input type="radio" name="optradio" checked="checked" value="studentform">Student</label>
-                <label class="radio-inline"><input type="radio" name="optradio" value="teacherform">Teacher</label>
+                <label class="radio-inline"><input type="radio" name="usertype" checked="checked" value="student">Student</label>
+                <label class="radio-inline"><input type="radio" name="usertype" value="teacher">Teacher</label>
             </div>
 
             <div class="form-group" id="studentform">
@@ -71,7 +71,7 @@
             </div>
             <br>
           
-          <button type="submit" class="btn btn-custom">Signup</button>
+          <button type="submit" class="btn btn-custom" value="Submit">Signup</button>
         </form> 
 
 
@@ -125,10 +125,10 @@
 
     <script>
         $(document).ready(function() {
-            $("input[name$='optradio']").click(function() {
+            $("input[name$='usertype']").click(function() {
                 var test = $(this).val();
 
-                if(test==="studentform"){
+                if(test==="student"){
                     $("#studentform").show();
                 }else{
                     $("#studentform").hide();

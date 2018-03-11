@@ -10,4 +10,9 @@ router.get('/signup', function(req, res, next) {
   res.render('signup', { title: 'epicLMS - Signup' });
 });
 
+router.post('/signup', function(req, res){
+  console.log(req.body);
+  res.send("recieved your request!");
+});
+
 module.exports = router;

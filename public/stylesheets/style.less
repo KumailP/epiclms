@@ -1,5 +1,5 @@
-@left-bar-clr: #424242;
-@right-bar-clr: #eee;
+@primary-color-1: #424242;
+@primary-color-2: #eee;
 
 body, html{
   width: 100%;
@@ -12,37 +12,26 @@ body, html{
   height: 100%;
   .row{
     height: 100%;
-    .col-l-style{
-      background-color: @left-bar-clr;
-      
-      .col-l-inner{
-        width: 300px;
-        margin: 0 auto;
-        margin-top: 30px;
-        
-        h1{
-          color: @right-bar-clr;
-          font-family: helvetica;
-          font-weight: bold;
-          text-align: center;
-        }
-      }
-
-    }
+    
     .col-r-style{
-      background-color: @right-bar-clr;
-      color: @left-bar-clr;
+      background-color: @primary-color-1;
+      height: 100%;
+      color: @primary-color-2;
       .r-inner{
+        background-color: @primary-color-2;
+
+        color: @primary-color-1 !important;
+
         .signuplink{
-          color: @left-bar-clr;
+          color: @primary-color-1;
           margin-left: 10px;
         }
         h1{
           text-align: center;
         }
         .btn-custom{
-          background-color: @left-bar-clr;
-          color: @right-bar-clr;
+          background-color: @primary-color-1;
+          color: @primary-color-2;
         }
         #signup-form{
           margin-top: 20px;
@@ -60,12 +49,12 @@ body, html{
         width: 700px;
         margin: 0 auto;
         margin-top: 50px;
-        border-left: 1px solid @left-bar-clr;
-        border-right: 1px solid @left-bar-clr;
-        color: @left-bar-clr;
+        border-left: 1px solid @primary-color-1;
+        border-right: 1px solid @primary-color-1;
+        color: @primary-color-1;
         padding: 80px;
         hr{
-          background-color: @right-bar-clr;
+          background-color: @primary-color-2;
         }
       }
     }
@@ -75,8 +64,8 @@ body, html{
 .btn-file {
   position: relative;
   overflow: hidden;
-  background-color: @left-bar-clr;
-  color: @right-bar-clr;
+  background-color: @primary-color-1;
+  color: @primary-color-2;
 }
 .btn-file input[type=file] {
   position: absolute;
