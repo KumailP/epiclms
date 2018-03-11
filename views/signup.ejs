@@ -34,7 +34,7 @@
 
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Department</label>
-                  <select class="form-control col-sm" id="exampleFormControlSelect1" name="dept">
+                  <select class="form-control col-sm" name="dept">
                     <option>Computer Science</option>
                     <option>Mechanical Engineering</option>
                     <option>Electrical Engineering</option>
@@ -63,10 +63,10 @@
 
             <div class="form-group" id="studentform">
                 <label for="exampleFormControlSelect1">Semester</label>
-                <select class="form-control col-sm" id="exampleFormControlSelect1">
-                        <% for(var i=1; i<=8; i++) {%>
-                            <option><%= i %></option>
-                        <% } %>
+                <select class="form-control col-sm" name="semester">
+                    <% for(var i=1; i<=8; i++) {%>
+                        <option><%= i %></option>
+                    <% } %>
                 </select>
             </div>
             <br>
