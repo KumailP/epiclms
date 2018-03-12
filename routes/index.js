@@ -1,5 +1,6 @@
 var express = require('express');
 var mysql = require("mysql");
+var bcrypt = require('bcrypt');
 var router = express.Router();
 
 var connection = mysql.createConnection({
@@ -26,6 +27,8 @@ router.get('/signup', function(req, res, next) {
   res.render('signup', { title: 'epicLMS - Signup' });
 });
 
+const saltRounds = 10;
+
 router.post('/signup', function(req, res){
   console.log(req.body);
   
@@ -50,14 +53,29 @@ router.post('/signup', function(req, res){
   if(req.body.pic === '') pic = 'default.jpg';
   else pic = req.body.pic;
 
-  var sqlArr = [req.body.fname, req.body.lname, req.body.email, req.body.password, dept, pic, usertype, semester];
+  var sqlArr = [req.body.fname, req.body.lname, req.body.email, dept, pic, usertype, semester];
 
-  connection.query('INSERT INTO students(first_name, last_Name, email, password, dept, pic, user_type, semester) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', sqlArr, function (error, results, fields) {
+  
+  connection.query('INSERT INTO students(first_name, last_Name, email, dept, pic, user_type, semester) VALUES (?, ?, ?, ?, ?, ?, ?)', sqlArr, function (error, results, fields) {
     if (error) throw error;
-    res.send("Inserted " + req.body.fname + " " + req.body.lname);
+    console.log("Inserted " + req.body.fname + " " + req.body.lname);
   });
   
+
+  bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+    connection.query('UPDATE students SET password = (?) WHERE email = (?)', [hash, req.body.email], function (error, results, fields) {
+      if (error) throw error;
+      console.log("Inserted hashed password.");
+    });
+  });
+
+  console.log("Signed up. Redirecting...");
+  res.redirect('/');
   
+});
+
+router.post('/', function(req, res){
+
 });
 
 module.exports = router;
