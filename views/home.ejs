@@ -8,8 +8,9 @@
         <h1><%= title %></h1>
         <hr>
         
-        
-
+        <% if(isAuthenticated){ %>
+        <a href="/logout" class="btn btn-custom" value="Submit">Logout</button>
+        <% } %>
       </div>
     </div>
   </div>

@@ -8,13 +8,13 @@
         <h1><%= title %></h1>
         <hr>
         
-        <form id="login-form">
+        <form id="login-form" method="POST" action="/login">
           
           <div class="form-group">
-            <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter Email">
+            <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter Email" name="email">
           </div>
           <div class="form-group">
-            <input type="password" class="form-control" placeholder="Enter Password">
+            <input type="password" class="form-control" placeholder="Enter Password" name="password">
             
           </div>
           
