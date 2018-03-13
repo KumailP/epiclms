@@ -68,11 +68,11 @@ passport.use(new LocalStrategy(
   {usernameField: 'email',
   passwordField: 'password'},
   function(username, password, done) {
-    console.log(username);
-    console.log(password);
+    // console.log(username);
+    // console.log(password);
 
     const db = require('./db');
-    db.query('SELECT id, password FROM students WHERE email = (?)', [username], function(err, results, fields){
+    db.query('SELECT id, password FROM users WHERE email = (?)', [username], function(err, results, fields){
       if(err) {done(err)}
 
       if (results.length === 0){

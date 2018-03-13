@@ -56,7 +56,7 @@ router.post('/signup', function(req, res){
     // console.log(`errors: ${JSON.stringify(errors)}`);
     res.render('signup', { title: 'epicLMS - Signup', errors: errors });
   }else{
-    console.log(req.body);
+    // console.log(req.body);
     var fname = req.body.fname;
     var lname = req.body.lname;
     var password = req.body.password;
@@ -88,14 +88,14 @@ router.post('/signup', function(req, res){
     var sqlArr = [fname, lname, email, dept, pic, usertype, semester];
 
     
-    db.query('INSERT INTO students(first_name, last_Name, email, dept, pic, user_type, semester) VALUES (?, ?, ?, ?, ?, ?, ?)', sqlArr, function (error, results, fields) {
+    db.query('INSERT INTO users(first_name, last_Name, email, dept, pic, user_type, semester) VALUES (?, ?, ?, ?, ?, ?, ?)', sqlArr, function (error, results, fields) {
       if (error) throw error;
       // console.log("Inserted " + fname + " " + lname);
     });
     
 
     bcrypt.hash(password, saltRounds, function(err, hash) {
-      db.query('UPDATE students SET password = (?) WHERE email = (?)', [hash, email], function (error, results, fields) {
+      db.query('UPDATE users SET password = (?) WHERE email = (?)', [hash, email], function (error, results, fields) {
         if (error) throw error;
         // console.log("Inserted hashed password.");
         // console.log("Signed up. Redirecting...");
