@@ -31,3 +31,7 @@ npm-debug.log
 
 # for env file
 .env
+
+# for displaypics folder
+public/displaypics/*
+!public/displaypics/default.jpg
