@@ -28,10 +28,10 @@ router.get('/', authenticationMiddleware(), function(req, res){
 
   // console.log(req.user);
 
-  db.query('SELECT pic FROM users WHERE id = (?)', [req.user.user_id], (err, results, fields) => {
+  db.query('SELECT first_name, pic FROM users WHERE id = (?)', [req.user.user_id], (err, results, fields) => {
     if(err) throw err;
-    // console.log('sending + ' + results[0].pic);
-    res.render('home', { title: 'Welcome', pic: results[0].pic });
+    
+    res.render('home', { title: 'Home', pic: results[0].pic, name: results[0].first_name });
   });
   
 });
