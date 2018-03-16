@@ -1,20 +1,117 @@
 <%- include('header') -%>
+  <div class="wrapper">
+    <div class="container index-container home-page">
 
-<div class="container index-container">
-  <div class="row">
-    
-    <div class="col-12 col-r-style">
-      <div class="r-inner">
-        <h1>Welcome, <%= name %>!</h1>
-        <hr>
-        
-        <% if(isAuthenticated){ %>
-        <img src="displaypics/<%= pic %>" alt="display picture">
-        <a href="/logout" class="btn btn-custom" value="Submit">Logout</button>
-        <% } %>
+      <div class="row">
+        <div class="left-div">
+          <img src="displaypics/<%= pic %>" alt="display picture" class="profpic">
+        </div>
+
+
+        <div class="mid-div">
+          <h1>Welcome,
+            <%= name %>!</h1>
+          <h2 id="curr-date"></h2>
+
+          <div class="inner-btns">
+            <a href="#" class="btn btn-custom">Courses</a>
+            <a href="#" class="btn btn-custom">Students</a>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
+
+        <div class="right-div">
+          <% if(isAuthenticated){ %>
+            <a href="/logout" class="btn btn-custom btn-logout">Logout</a>
+            <% } %>
+        </div>
       </div>
+
+
+      <hr>
+
+      <div class="courses-sec">
+        <a href="#" class="course-block">
+          <div>
+            Operating Systems
+          </div>
+        </a>
+
+        <a href="#" class="course-block">
+          <div>
+            Database Systems
+          </div>
+        </a>
+
+        <a href="#" class="course-block">
+          <div>
+            Object Oriented Analysis & Design
+          </div>
+        </a>
+
+        <a href="#" class="course-block">
+          <div>
+            Object Oriented Analysis and Design
+          </div>
+        </a>
+
+        <a href="#" class="course-block">
+          <div>
+            Probability & Statistics
+          </div>
+        </a>
+
+        <a href="#" class="course-block">
+          <div>
+            Probability & Statistics
+          </div>
+        </a>
+
+        <a href="#" class="course-block">
+          <div>
+            Probability & Statistics
+          </div>
+        </a>
+
+
+
+      </div>
+
+
+      <div class="clearfix"></div>
+
     </div>
   </div>
-</div>
 
-<%- include('footer') -%>
+
+  </div>
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+  <script>
+    $(document).ready(function () {
+
+      function formatDate(date) {
+        var monthNames = [
+          "January", "February", "March",
+          "April", "May", "June", "July",
+          "August", "September", "October",
+          "November", "December"
+        ];
+
+        var day = date.getDate();
+        var monthIndex = date.getMonth();
+        var year = date.getFullYear();
+
+        return day + ' ' + monthNames[monthIndex] + ' ' + year;
+      }
+
+      $("#curr-date").html(formatDate(new Date()));
+    });
+  </script>
+
+  <%- include('footer') -%>

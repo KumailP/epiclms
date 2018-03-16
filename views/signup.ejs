@@ -1,152 +1,158 @@
 <%- include('header') -%>
 
-<div class="container index-container">
-  <div class="row">
-    
-    <div class="col-12 col-r-style">
-      <div class="r-inner">
-        <h1><%= title %></h1>
-        
-
-         <hr>
-        <% if(errors){ %>
-            <% errors.forEach(function(err){ %>
-                <div class="alert alert-danger">
-                    <%= err.msg %>
-                </div>
-            <% }) %>
-         <% } %>
-
-        <form id="signup-form" method="POST" action="/signup" enctype="multipart/form-data">
-          
-          <div class="form-group">
-            <div class="row">
-              <div class="col-6">
-                
-                <input type="text" class="form-control" id="fname" aria-describedby="fname" placeholder="Enter First Name" name="fname">
-              </div>
-              <div class="col-6">
-                
-                <input type="text" class="form-control" id="lname" aria-describedby="lname" placeholder="Enter Last Name" name="lname">
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            
-            <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email" name="email">
-          </div>
-          <div class="form-group">
-            
-            <input type="password" class="form-control" placeholder="Password" name="password">
-            </div>
-            <div class="form-group">
-            <input type="password" class="form-control" placeholder="Re-enter Password" name="password2">
-          </div>
-
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Department</label>
-                  <select class="form-control col-sm" name="dept">
-                    <option>Computer Science</option>
-                    <option>Mechanical Engineering</option>
-                    <option>Electrical Engineering</option>
-                    <option>BBA</option>
-                  </select>
-            </div>
+    <div class="wrapper">
+        <div class="container index-container cont-width">
 
 
-            <div class="form-group">
-                    <label>Upload Image</label>
-                    <br>
-                    <img id='img-upload' src="images/defaultpic.jpg"/>
-                    <div class="input-group">
-                        <span class="input-group-btn">
-                            <span class="btn btn-file">
-                                Browse <input type="file" id="imgInp" name="pic">
-                            </span>
-                        </span>
-                        <input type="text" class="form-control" readonly>
+            <a href="/login" class="float-left">
+                <h1 class="fas fa-arrow-left"></h1>
+            </a>
+            <h1>
+                <%= title %>
+            </h1>
+            <div class="clearfix"></div>
+
+
+            <hr>
+            <% if(errors){ %>
+                <% errors.forEach(function(err){ %>
+                    <div class="alert alert-danger">
+                        <%= err.msg %>
                     </div>
-            </div>
-            <div class="form-check form-check-inline">
-                <label class="radio-inline"><input type="radio" name="usertype" checked="checked" value="student">Student</label>
-                <label class="radio-inline"><input type="radio" name="usertype" value="teacher">Teacher</label>
-            </div>
+                    <% }) %>
+                        <% } %>
 
-            <div class="form-group" id="studentform">
-                <label for="exampleFormControlSelect1">Semester</label>
-                <select class="form-control col-sm" name="semester">
-                    <% for(var i=1; i<=8; i++) {%>
-                        <option><%= i %></option>
-                    <% } %>
-                </select>
-            </div>
-            <br>
-          
-          <button type="submit" class="btn btn-custom" value="Submit">Signup</button>
-        </form> 
+                            <form id="signup-form" method="POST" action="/signup" enctype="multipart/form-data">
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-6">
+
+                                            <input type="text" class="form-control" id="fname" aria-describedby="fname" placeholder="Enter First Name" name="fname">
+                                        </div>
+                                        <div class="col-6">
+
+                                            <input type="text" class="form-control" id="lname" aria-describedby="lname" placeholder="Enter Last Name" name="lname">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email" name="email">
+                                </div>
+                                <div class="form-group">
+
+                                    <input type="password" class="form-control" placeholder="Password" name="password">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Re-enter Password" name="password2">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Department</label>
+                                    <select class="form-control col-sm" name="dept">
+                                        <option>Computer Science</option>
+                                        <option>Mechanical Engineering</option>
+                                        <option>Electrical Engineering</option>
+                                        <option>BBA</option>
+                                    </select>
+                                </div>
 
 
-      </div>
+                                <div class="form-group">
+                                    <label>Upload Image</label>
+                                    <br>
+                                    <img id='img-upload' src="images/defaultpic.jpg" />
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <span class="btn btn-file">
+                                                Browse
+                                                <input type="file" id="imgInp" name="pic">
+                                            </span>
+                                        </span>
+                                        <input type="text" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="usertype" checked="checked" value="student">Student</label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="usertype" value="teacher">Teacher</label>
+                                </div>
+
+                                <div class="form-group" id="studentform">
+                                    <label for="exampleFormControlSelect1">Semester</label>
+                                    <select class="form-control col-sm" name="semester">
+                                        <% for(var i=1; i<=8; i++) {%>
+                                            <option>
+                                                <%= i %>
+                                            </option>
+                                            <% } %>
+                                    </select>
+                                </div>
+                                <br>
+
+                                <button type="submit" class="btn btn-custom" value="Submit">Signup</button>
+                            </form>
+
+
+        </div>
     </div>
-  </div>
-</div>
 
-<script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-
-  <script>
-  $(document).ready( function() {
-    	$(document).on('change', '.btn-file :file', function() {
-		var input = $(this),
-			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-		input.trigger('fileselect', [label]);
-		});
-
-		$('.btn-file :file').on('fileselect', function(event, label) {
-		    
-		    var input = $(this).parents('.input-group').find(':text'),
-		        log = label;
-		    
-		    if( input.length ) {
-		        input.val(log);
-		    } else {
-		        if( log ) alert(log);
-		    }
-	    
-		});
-		function readURL(input) {
-		    if (input.files && input.files[0]) {
-		        var reader = new FileReader();
-		        
-		        reader.onload = function (e) {
-		            $('#img-upload').attr('src', e.target.result);
-		        }
-		        
-		        reader.readAsDataURL(input.files[0]);
-		    }
-		}
-
-		$("#imgInp").change(function(){
-		    readURL(this);
-		}); 	
-    });
-    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
 
     <script>
-        $(document).ready(function() {
-            $("input[name$='usertype']").click(function() {
-                var test = $(this).val();
+        $(document).ready(function () {
+            $(document).on('change', '.btn-file :file', function () {
+                var input = $(this),
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                input.trigger('fileselect', [label]);
+            });
 
-                if(test==="student"){
-                    $("#studentform").show();
-                }else{
-                    $("#studentform").hide();
+            $('.btn-file :file').on('fileselect', function (event, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = label;
+
+                if (input.length) {
+                    input.val(log);
+                } else {
+                    if (log) alert(log);
                 }
-                
+
+            });
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#img-upload').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#imgInp").change(function () {
+                readURL(this);
             });
         });
     </script>
 
-<%- include('footer') -%>
+    <script>
+        $(document).ready(function () {
+            $("input[name$='usertype']").click(function () {
+                var test = $(this).val();
+
+                if (test === "student") {
+                    $("#studentform").show();
+                } else {
+                    $("#studentform").hide();
+                }
+
+            });
+        });
+    </script>
+
+    <%- include('footer') -%>

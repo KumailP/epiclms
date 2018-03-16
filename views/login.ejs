@@ -1,29 +1,28 @@
 <%- include('header') -%>
 
-<div class="container index-container">
-  <div class="row">
-    
-    <div class="col-12 col-r-style">
-      <div class="r-inner">
-        <h1><%= title %></h1>
-        <hr>
-        
-        <form id="login-form" method="POST" action="/login">
-          
-          <div class="form-group">
-            <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter Email" name="email">
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" placeholder="Enter Password" name="password">
-            
-          </div>
-          
-          <button type="submit" class="btn btn-custom">Login</button><a href="/signup" class="signuplink">or Signup</a>
-        </form>
+  <div class="wrapper">
+    <div class="container index-container cont-width">
 
-      </div>
+      <h1>
+        <%= title %>
+      </h1>
+      <hr>
+
+      <form id="login-form" method="POST" action="/login">
+
+        <div class="form-group">
+          <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter Email" name="email">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" placeholder="Enter Password" name="password">
+
+        </div>
+
+        <button type="submit" class="btn btn-custom">Login</button>
+        <a href="/signup" class="signuplink">or Signup</a>
+      </form>
+
     </div>
   </div>
-</div>
 
-<%- include('footer') -%>
+  <%- include('footer') -%>
