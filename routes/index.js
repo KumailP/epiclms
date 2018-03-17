@@ -38,7 +38,13 @@ router.get('/', authenticationMiddleware(), function(req, res){
 
       db.query('SELECT course_name, course_code FROM course INNER JOIN student ON course.semester = (SELECT semester FROM student WHERE student_id = (?)) AND course.dept_id = (SELECT dept_id FROM student WHERE student_id = (?)) WHERE student_id = (?)', [req.user.user_id, req.user.user_id, req.user.user_id], (err, results, fields) =>{
 
-        res.render('home', { title: 'Home', pic: pic, name: fname, usertype: 'student', courses: results });
+        var courses = results;
+
+        db.query('select faculty.first_name, course.course_name from ((faculty inner join course on faculty.faculty_id = course.faculty_id) inner join student on student.semester = course.semester) where student.student_id = (?)', [req.user.user_id], (err, results, fields) => {
+          
+          res.render('home', { title: 'Home', pic: pic, name: fname, usertype: req.user.user_type, courses: courses, teachers: results });
+        });
+        
       });
       
     });

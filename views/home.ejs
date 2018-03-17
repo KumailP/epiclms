@@ -49,6 +49,15 @@
 
       <div class="clearfix"></div>
 
+
+      <% if(usertype == 'student'){ %>
+        <ul>
+          <% teachers.forEach(function(teacher){ %>
+            <li><%= teacher.first_name %> teaches you <%= teacher.course_name %></li>
+          <% }) %>
+        </ul>
+      <% } %>
+      
     </div>
   </div>
 
