@@ -73,17 +73,35 @@ passport.use(new LocalStrategy(
     // console.log(password);
 
     const db = require('./db');
-    db.query('SELECT id, password FROM users WHERE email = (?)', [username], function(err, results, fields){
+    db.query('SELECT student_id, password FROM student WHERE email = (?)', [username], function(err, results, fields){
       if(err) {done(err)}
 
       if (results.length === 0){
-        done(null, false);
+        db.query('SELECT faculty_id, password FROM faculty WHERE email = (?)', [username], function(err, results, fields){
+          if(err) {done(err)}
+    
+          if (results.length === 0){
+            done(null, false);
+          }else{
+    
+            const hash = results[0].password.toString();
+            bcrypt.compare(password, hash, function(err, response){
+              if(response === true){
+                return done(null, {user_id: results[0].faculty_id, user_type: 'faculty'});
+              }else {
+                return done(null, false);
+              }
+            });
+          }
+        });
+
+
       }else{
 
         const hash = results[0].password.toString();
         bcrypt.compare(password, hash, function(err, response){
           if(response === true){
-            return done(null, {user_id: results[0].id});
+            return done(null, {user_id: results[0].student_id, user_type: 'student'});
           }else {
             return done(null, false);
           }

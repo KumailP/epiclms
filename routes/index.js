@@ -15,6 +15,8 @@ const storage = multer.diskStorage({
   }
 });
 
+var currUserEmail = null;
+
 const upload = multer({
   storage: storage,
   limits: {fileSize: 1000000}
@@ -28,11 +30,32 @@ router.get('/', authenticationMiddleware(), function(req, res){
 
   // console.log(req.user);
 
-  db.query('SELECT first_name, pic FROM users WHERE id = (?)', [req.user.user_id], (err, results, fields) => {
-    if(err) throw err;
-    
-    res.render('home', { title: 'Home', pic: results[0].pic, name: results[0].first_name });
-  });
+  if(req.user.user_type == 'student'){
+    db.query('SELECT first_name, photo FROM student WHERE student_id = (?)', [req.user.user_id], (err, results, fields) => {
+      if(err) throw err;
+      var pic = results[0].photo;
+      var fname = results[0].first_name;
+
+      db.query('SELECT course_name, course_code FROM course INNER JOIN student ON course.semester = (SELECT semester FROM student WHERE student_id = (?)) AND course.dept_id = (SELECT dept_id FROM student WHERE student_id = (?)) WHERE student_id = (?)', [req.user.user_id, req.user.user_id, req.user.user_id], (err, results, fields) =>{
+
+        res.render('home', { title: 'Home', pic: pic, name: fname, usertype: 'student', courses: results });
+      });
+      
+    });
+  }else if(req.user.user_type == 'faculty'){
+    db.query('SELECT first_name, photo FROM faculty WHERE faculty_id = (?)', [req.user.user_id], (err, results, fields) => {
+      if(err) throw err;
+      
+      var pic = results[0].photo;
+      var fname = results[0].first_name;
+
+      db.query('select course_name, course_code from course inner join faculty on course.faculty_id = (?)', [req.user.user_id], (err, results, fields) =>{
+
+        res.render('home', { title: 'Home', pic: pic, name: fname, usertype: 'faculty', courses: results });
+      });
+    });
+  }
+  
   
 });
 
@@ -69,7 +92,7 @@ router.post('/signup', function(req, res){
   
   upload(req, res, (err) => {
     var pic = '';
-    console.log('img uploaded.');
+    // console.log('img uploaded.');
     // console.log(req.file.filename);
     if(req.file == undefined)
       pic = 'default.jpg';
@@ -110,23 +133,30 @@ router.post('/signup', function(req, res){
       }else if(dept === 'BBA'){
         dept = 4;
       }
-      var usertype = 1;
-      if(req.body.usertype === 'teacher') usertype = 2;
-
-      if(usertype === 2) semester = null;
 
 
-      var sqlArr = [fname, lname, email, dept, pic, usertype, semester];
+      var usertype = req.body.usertype.toLowerCase();
 
+      if(usertype === 'student'){
+        var sqlArr = [fname, lname, email, dept, pic, semester];
+
+        db.query('INSERT INTO student(first_name, last_Name, email, dept_id, photo, semester) VALUES (?, ?, ?, ?, ?, ?)', sqlArr, function (error, results, fields) {
+          if (error) throw error;
+          // console.log("Inserted " + fname + " " + lname);
+        });
+      }else if(usertype === 'faculty'){
+        var sqlArr = [fname, lname, email, dept, pic];
+
+        db.query('INSERT INTO faculty(first_name, last_Name, email, dept_id, photo) VALUES (?, ?, ?, ?, ?)', sqlArr, function (error, results, fields) {
+          if (error) throw error;
+          // console.log("Inserted " + fname + " " + lname);
+        });
+      }
       
-      db.query('INSERT INTO users(first_name, last_Name, email, dept, pic, user_type, semester) VALUES (?, ?, ?, ?, ?, ?, ?)', sqlArr, function (error, results, fields) {
-        if (error) throw error;
-        // console.log("Inserted " + fname + " " + lname);
-      });
       
 
       bcrypt.hash(password, saltRounds, function(err, hash) {
-        db.query('UPDATE users SET password = (?) WHERE email = (?)', [hash, email], function (error, results, fields) {
+        db.query('UPDATE ' + usertype + ' SET password = (?) WHERE email = (?)', [hash, email], function (error, results, fields) {
           if (error) throw error;
           // console.log("Inserted hashed password.");
           // console.log("Signed up. Redirecting...");
@@ -137,9 +167,7 @@ router.post('/signup', function(req, res){
             const user_id = results[0];
 
             // console.log(user_id);
-            req.login(user_id, function(err){
-              res.redirect('/');
-            });
+            res.redirect('/');
           });
 
         });

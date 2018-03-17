@@ -32,47 +32,15 @@
       <hr>
 
       <div class="courses-sec">
+        <% courses.forEach(function(course){ %>
         <a href="#" class="course-block">
           <div>
-            Operating Systems
+            <%= course.course_name %>
+            <br>
+            (<%= course.course_code %>)
           </div>
         </a>
-
-        <a href="#" class="course-block">
-          <div>
-            Database Systems
-          </div>
-        </a>
-
-        <a href="#" class="course-block">
-          <div>
-            Object Oriented Analysis & Design
-          </div>
-        </a>
-
-        <a href="#" class="course-block">
-          <div>
-            Object Oriented Analysis and Design
-          </div>
-        </a>
-
-        <a href="#" class="course-block">
-          <div>
-            Probability & Statistics
-          </div>
-        </a>
-
-        <a href="#" class="course-block">
-          <div>
-            Probability & Statistics
-          </div>
-        </a>
-
-        <a href="#" class="course-block">
-          <div>
-            Probability & Statistics
-          </div>
-        </a>
+        <% }) %>
 
 
 
