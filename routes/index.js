@@ -4,6 +4,7 @@ var bcrypt = require('bcrypt');
 const expressValidator = require('express-validator');
 var passport = require('passport');
 var path = require('path');
+var fs = require('fs');
 var router = express.Router();
 
 // set storage engine
@@ -117,6 +118,11 @@ router.post('/signup', function(req, res){
 
     if(errors){
       // console.log(`errors: ${JSON.stringify(errors)}`);
+      if(req.file != undefined){
+        fs.unlink(path.join('public', 'displaypics', req.file.filename), (err) => {
+          if (err) throw err;
+        });
+      }
       res.render('signup', { title: 'epicLMS - Signup', errors: errors });
     }else{
       // console.log(req.body);
@@ -130,54 +136,109 @@ router.post('/signup', function(req, res){
 
       const db = require('../db.js');
 
-      if(dept === 'Computer Science'){
-        dept = 1;
-      }else if(dept === 'Mechanical Engineering'){
-        dept = 2;
-      }else if(dept === 'Electrical Engineering'){
-        dept = 3;
-      }else if(dept === 'BBA'){
-        dept = 4;
-      }
-
 
       var usertype = req.body.usertype.toLowerCase();
 
+      var sqlArr = [fname, lname, email, dept, pic];
       if(usertype === 'student'){
-        var sqlArr = [fname, lname, email, dept, pic, semester];
-
-        db.query('INSERT INTO student(first_name, last_Name, email, dept_id, photo, semester) VALUES (?, ?, ?, ?, ?, ?)', sqlArr, function (error, results, fields) {
-          if (error) throw error;
-          // console.log("Inserted " + fname + " " + lname);
-        });
+        sqlArr.push(semester);
+        var query = 'INSERT INTO student(first_name, last_Name, email, dept_id, photo, semester) VALUES (?, ?, ?, ?, ?, ?)';
       }else if(usertype === 'faculty'){
-        var sqlArr = [fname, lname, email, dept, pic];
-
-        db.query('INSERT INTO faculty(first_name, last_Name, email, dept_id, photo) VALUES (?, ?, ?, ?, ?)', sqlArr, function (error, results, fields) {
-          if (error) throw error;
-          // console.log("Inserted " + fname + " " + lname);
-        });
+        var query = 'INSERT INTO faculty(first_name, last_Name, email, dept_id, photo) VALUES (?, ?, ?, ?, ?)';
       }
+
+        db.query(query, sqlArr, function (error, results, fields) {
+          if (error) {
+            //console.log(error);
+            if (error.errno == 1062){
+              var err = [{
+                msg: "User already exists."
+              }];
+              if(req.file != undefined){
+                fs.unlink(path.join('public', 'displaypics', req.file.filename), (err) => {
+                  if (err) throw err;
+                });
+              }
+              res.render('signup', { title: 'epicLMS - Signup', errors: err });
+            }
+          }else{
+            bcrypt.hash(password, saltRounds, function(err, hash) {
+              db.query('UPDATE ' + usertype + ' SET password = (?) WHERE email = (?)', [hash, email], function (error, results, fields) {
+                if (error) throw error;
       
+                db.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields){
+                  if (error) throw error;
+                  const user_id = results[0];
+                  res.redirect('/');
+                });
       
-
-      bcrypt.hash(password, saltRounds, function(err, hash) {
-        db.query('UPDATE ' + usertype + ' SET password = (?) WHERE email = (?)', [hash, email], function (error, results, fields) {
-          if (error) throw error;
-          // console.log("Inserted hashed password.");
-          // console.log("Signed up. Redirecting...");
-
-          db.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields){
-            if (error) throw error;
-
-            const user_id = results[0];
-
-            // console.log(user_id);
-            res.redirect('/');
-          });
-
+              });
+            });
+          }
         });
-      });
+
+      // if(usertype === 'student'){
+        
+      //   var sqlArr = [fname, lname, email, dept, pic, semester];
+
+      //   db.query('INSERT INTO student(first_name, last_Name, email, dept_id, photo, semester) VALUES (?, ?, ?, ?, ?, ?)', sqlArr, function (error, results, fields) {
+      //     if (error) {
+      //       //console.log(error);
+      //       if (error.errno == 1062){
+      //         var err = [{
+      //           msg: "User already exists."
+      //         }];
+      //         fs.unlink(path.join('public', 'displaypics', req.file.filename), (err) => {
+      //           if (err) throw err;
+      //         });
+      //         res.render('signup', { title: 'epicLMS - Signup', errors: err });
+      //       }
+      //     }else{
+      //       bcrypt.hash(password, saltRounds, function(err, hash) {
+      //         db.query('UPDATE ' + usertype + ' SET password = (?) WHERE email = (?)', [hash, email], function (error, results, fields) {
+      //           if (error) throw error;
+      
+      //           db.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields){
+      //             if (error) throw error;
+      //             const user_id = results[0];
+      //             res.redirect('/');
+      //           });
+      
+      //         });
+      //       });
+      //     }
+      //   });
+      // }else if(usertype === 'faculty'){
+      //   var sqlArr = [fname, lname, email, dept, pic];
+
+      //   db.query('INSERT INTO faculty(first_name, last_Name, email, dept_id, photo) VALUES (?, ?, ?, ?, ?)', sqlArr, function (error, results, fields) {
+      //     if (error) {
+      //       //console.log(error);
+      //       if (error.errno == 1062){
+      //         var err = [{
+      //           msg: "User already exists."
+      //         }];
+      //         fs.unlink(path.join('public', 'displaypics', req.file.filename), (err) => {
+      //           if (err) throw err;
+      //         });
+      //         res.render('signup', { title: 'epicLMS - Signup', errors: err });
+      //       }
+      //     }else{
+      //       bcrypt.hash(password, saltRounds, function(err, hash) {
+      //         db.query('UPDATE ' + usertype + ' SET password = (?) WHERE email = (?)', [hash, email], function (error, results, fields) {
+      //           if (error) throw error;
+      
+      //           db.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields){
+      //             if (error) throw error;
+      //             const user_id = results[0];
+      //             res.redirect('/');
+      //           });
+      
+      //         });
+      //       });
+      //     }
+      //   });
+      // }
     }
   });
 
