@@ -5,3 +5,5 @@ After cloning,
 	<li>npm install (to install dependencies)</li>
 	<li>npm start (to start server on localhost:3000 using nodemon)</li>
 <ol>
+<h3>Database Schema</h3>
+![DB Schema](https://i.imgur.com/slgkORT.png "EpicLMS Database Schema")
