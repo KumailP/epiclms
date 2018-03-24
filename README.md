@@ -6,4 +6,4 @@ After cloning,
 	<li>npm start (to start server on localhost:3000 using nodemon)</li>
 <ol>
 <h3>Database Schema</h3>
-<img src="./BDSchema.png">
+<img src="BDSchema.png">
