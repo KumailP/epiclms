@@ -19,81 +19,81 @@
                     <div class="alert alert-danger">
                         <%= err.msg %>
                     </div>
-                    <% }) %>
-                        <% } %>
+                <% }) %>
+            <% } %>
 
-                            <form id="signup-form" method="POST" action="/signup" enctype="multipart/form-data">
+            <form id="signup-form" method="POST" action="/signup" enctype="multipart/form-data">
 
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-6">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-6">
 
-                                            <input type="text" class="form-control" id="fname" aria-describedby="fname" placeholder="Enter First Name" name="fname">
-                                        </div>
-                                        <div class="col-6">
+                            <input type="text" class="form-control" id="fname" aria-describedby="fname" placeholder="Enter First Name" name="fname">
+                        </div>
+                        <div class="col-6">
 
-                                            <input type="text" class="form-control" id="lname" aria-describedby="lname" placeholder="Enter Last Name" name="lname">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
+                            <input type="text" class="form-control" id="lname" aria-describedby="lname" placeholder="Enter Last Name" name="lname">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
 
-                                    <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email" name="email">
-                                </div>
-                                <div class="form-group">
+                    <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email" name="email">
+                </div>
+                <div class="form-group">
 
-                                    <input type="password" class="form-control" placeholder="Password" name="password">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control" placeholder="Re-enter Password" name="password2">
-                                </div>
+                    <input type="password" class="form-control" placeholder="Password" name="password">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Re-enter Password" name="password2">
+                </div>
 
-                                <div class="form-group">
-                                    <label for="exampleFormControlSelect1">Department</label>
-                                    <select class="form-control col-sm" name="dept">
-                                        <option value=1>Computer Science</option>
-                                        <option value=2>Mechanical Engineering</option>
-                                        <option value=3>Electrical Engineering</option>
-                                        <option value=4>BBA</option>
-                                    </select>
-                                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Department</label>
+                    <select class="form-control col-sm" name="dept">
+                        <option value=1>Computer Science</option>
+                        <option value=2>Mechanical Engineering</option>
+                        <option value=3>Electrical Engineering</option>
+                        <option value=4>BBA</option>
+                    </select>
+                </div>
 
 
-                                <div class="form-group">
-                                    <label>Upload Image</label>
-                                    <br>
-                                    <img id='img-upload' src="images/defaultpic.jpg" />
-                                    <div class="input-group">
-                                        <span class="input-group-btn">
-                                            <span class="btn btn-file">
-                                                Browse
-                                                <input type="file" id="imgInp" name="pic">
-                                            </span>
-                                        </span>
-                                        <input type="text" class="form-control" readonly>
-                                    </div>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="usertype" checked="checked" value="student">Student</label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="usertype" value="faculty">Teacher</label>
-                                </div>
+                <div class="form-group">
+                    <label>Upload Image</label>
+                    <br>
+                    <img id='img-upload' src="images/defaultpic.jpg" />
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <span class="btn btn-file">
+                                Browse
+                                <input type="file" id="imgInp" name="pic">
+                            </span>
+                        </span>
+                        <input type="text" class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label class="radio-inline">
+                        <input type="radio" name="usertype" checked="checked" value="student">Student</label>
+                    <label class="radio-inline">
+                        <input type="radio" name="usertype" value="faculty">Teacher</label>
+                </div>
 
-                                <div class="form-group" id="studentform">
-                                    <label for="exampleFormControlSelect1">Semester</label>
-                                    <select class="form-control col-sm" name="semester">
-                                        <% for(var i=1; i<=8; i++) {%>
-                                            <option>
-                                                <%= i %>
-                                            </option>
-                                            <% } %>
-                                    </select>
-                                </div>
-                                <br>
+                <div class="form-group" id="studentform">
+                    <label for="exampleFormControlSelect1">Semester</label>
+                    <select class="form-control col-sm" name="semester">
+                        <% for(var i=1; i<=8; i++) {%>
+                            <option>
+                                <%= i %>
+                            </option>
+                            <% } %>
+                    </select>
+                </div>
+                <br>
 
-                                <button type="submit" class="btn btn-custom" value="Submit">Signup</button>
-                            </form>
+                <button type="submit" class="btn btn-custom" value="Submit">Signup</button>
+            </form>
 
 
         </div>
