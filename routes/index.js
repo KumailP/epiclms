@@ -16,7 +16,25 @@ const storage = multer.diskStorage({
   }
 });
 
+router.use( function( req, res, next ) {
+  // this middleware will call for each requested
+  // and we checked for the requested query properties
+  // if _method was existed
+  // then we know, clients need to call DELETE request instead
+  if ( req.query._method == 'DELETE' ) {
+      // change the original METHOD
+      // into DELETE method
+      req.method = 'DELETE';
+      // and set requested url to /user/12
+      req.url = req.path;
+  }       
+  next(); 
+});
+
+
 var currUserEmail = null;
+var currUserName = null;
+var currUserImage = null;
 
 const upload = multer({
   storage: storage,
@@ -36,8 +54,10 @@ router.get('/', authenticationMiddleware(), function(req, res){
       if(err) throw err;
       var pic = results[0].photo;
       var fname = results[0].first_name;
+      currUserName = fname;
+      currUserImage = pic;
 
-      db.query('SELECT course_name, course_code FROM course INNER JOIN student ON course.semester = (SELECT semester FROM student WHERE student_id = (?)) AND course.dept_id = (SELECT dept_id FROM student WHERE student_id = (?)) WHERE student_id = (?)', [req.user.user_id, req.user.user_id, req.user.user_id], (err, results, fields) =>{
+      db.query('SELECT * FROM course INNER JOIN student_course WHERE student_id = (?) AND student_course.course_id = course.course_id', [req.user.user_id], (err, results, fields) =>{
 
         var courses = results;
 
@@ -55,6 +75,8 @@ router.get('/', authenticationMiddleware(), function(req, res){
       
       var pic = results[0].photo;
       var fname = results[0].first_name;
+      currUserName = fname;
+      currUserImage = pic;
 
       db.query('select course_name, course_code from course inner join faculty on course.faculty_id = (?)', [req.user.user_id], (err, results, fields) =>{
 
@@ -68,12 +90,12 @@ router.get('/', authenticationMiddleware(), function(req, res){
 
 router.get('/login', function(req, res, next) {
   if(req.query.error == 1){
-    res.render('login', { title: 'epicLMS - Login', error: 'Unable to login' });
+    res.render('login', { title: 'Login', error: 'Unable to login' });
   }else{
     if(req.isAuthenticated()){
       res.redirect('/');
     }else{
-      res.render('login', { title: 'epicLMS - Login', error: null });
+      res.render('login', { title: 'Login', error: null });
     }
   }
 });
@@ -93,7 +115,7 @@ router.get('/signup', function(req, res, next) {
   if(req.isAuthenticated()){
     res.redirect('/');
   }else{
-    res.render('signup', { title: 'epicLMS - Signup', errors: null });
+    res.render('signup', { title: 'Signup', errors: null });
   }
 });
 
@@ -127,7 +149,7 @@ router.post('/signup', function(req, res){
           if (err) throw err;
         });
       }
-      res.render('signup', { title: 'epicLMS - Signup', errors: errors });
+      res.render('signup', { title: 'Signup', errors: errors });
     }else{
       // console.log(req.body);
       var fname = req.body.fname;
@@ -163,7 +185,7 @@ router.post('/signup', function(req, res){
                   if (err) throw err;
                 });
               }
-              res.render('signup', { title: 'epicLMS - Signup', errors: err });
+              res.render('signup', { title: 'Signup', errors: err });
             }
           }else{
             bcrypt.hash(password, saltRounds, function(err, hash) {
@@ -184,6 +206,39 @@ router.post('/signup', function(req, res){
   });
 
   
+});
+
+router.get('/manage-course', authenticationMiddleware(), function(req, res){
+  if(currUserName === null) res.redirect('/');
+
+  const db = require('../db');
+  db.query('SELECT * FROM course INNER JOIN student_course WHERE student_id = (?) AND student_course.course_id = course.course_id', [req.user.user_id], function(err, results){
+    if (err) throw err;
+      var courses = results;
+      db.query('SELECT course_id, course_code, course_name from course inner join student on course.semester = student.semester AND course.dept_id = student.dept_id WHERE student.student_id = (?)', [req.user.user_id], function(err, results){
+        if (err) throw err;
+        res.render('manage-course', { title: 'Courses', courses: courses, allcourses: results, pic: currUserImage, name: currUserName, usertype: req.user.user_type});
+      });
+  });
+});
+
+router.get('/delete-course', authenticationMiddleware(), function(req, res){
+  const db = require('../db');
+  
+  db.query('DELETE FROM student_course WHERE course_id = (?) AND student_id = (?)', [req.query.courseid, req.user.user_id], function(err, results){
+    res.redirect('/manage-course');
+  });
+});
+
+router.post('/enroll-course', authenticationMiddleware(), function(req, res){
+  var obj = {};
+  //res.send(req.body);
+  
+  const db = require('../db');
+  db.query('INSERT INTO student_course (student_id, course_id) VALUES((?), (?))', [req.user.user_id, req.body.id], function(err, results){
+    if(err) throw err;
+    res.send(req.body);
+  });
 });
 
 passport.serializeUser(function(user_id, done) {

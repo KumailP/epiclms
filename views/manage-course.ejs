@@ -1,0 +1,70 @@
+<%- include('./partials/home-body-1') -%>
+
+    <h2>Current Enrollments:</h2>
+    <ul id="course-ul">
+        <% courses.forEach(function(course){ %>
+            <li><%= course.course_code %> - <%= course.course_name %> <a href="/delete-course?courseid=<%= course.course_id %>&?_method=DELETE">X</a></li>
+            <% }) %>
+    </ul>
+
+    <h2>Add Course:</h2>
+    <form action="" class="row">
+        <select name="" id="course-select" class="form-control col-6">
+            <% allcourses.forEach(function(course){ %>
+                <option value="<%= course.course_id %>"><%= course.course_code %> - <%= course.course_name %></option>
+            <% }) %>
+        </select>
+        <button type="submit" class="btn btn-custom" id="enroll-btn">Enroll</button>
+    </form>
+    <br>
+    <div class="row">
+        <div class="alert alert-danger" role="alert" id="course-warning">Already enrolled in course!</div>
+        <div class="alert alert-success" role="alert" id="course-success">Successfully enrolled!</div>
+    </div>
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(function(){		
+            $("#course-warning").hide();
+            $("#course-success").hide();
+            if($("#course-ul").children("li").length === 0){
+                $('#course-ul').append('<p>No courses yet!</p>');
+            }
+            $('#enroll-btn').click(function(e){                
+                $("#course-warning").hide();
+                $("#course-success").hide();
+                e.preventDefault();
+
+                var course = {};
+                course.info = $('#course-select').find(":selected").text();
+                course.id = $('#course-select').find(":selected").val();
+
+                if($('#course-ul li:contains('+course.info+')').length == 0){
+
+                    
+                    $.ajax({
+                        type: 'POST',
+                        data: JSON.stringify(course),
+                        contentType: 'application/json',
+                        url: 'http://localhost:3000/enroll-course',						
+                        success: function(course) {
+                            // console.log('success');
+                            // console.log(JSON.stringify(course));
+                            $("#course-ul").children("p").remove();
+                            $('#course-ul').append('<li>'+course.info+' <a href="/delete-course?courseid=' + course.id + '&?_method=DELETE">X</a></li>');
+                            $("#course-success").show();
+                        }
+                    });
+                }else{
+                    $("#course-warning").show();
+                }
+            });				
+        });
+    </script>
+
+<%- include('./partials/home-body-2') -%>

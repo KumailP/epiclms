@@ -1,35 +1,4 @@
-<%- include('header') -%>
-  <div class="wrapper">
-    <div class="container index-container home-page">
-
-      <div class="row">
-        <div class="left-div">
-          <img src="displaypics/<%= pic %>" alt="display picture" class="profpic">
-        </div>
-
-
-        <div class="mid-div">
-          <h1>Welcome,
-            <%= name %>!</h1>
-          <h2 id="curr-date"></h2>
-
-          <div class="inner-btns">
-            <a href="#" class="btn btn-custom">Courses</a>
-            <a href="#" class="btn btn-custom">Students</a>
-          </div>
-          <div class="clearfix"></div>
-        </div>
-
-
-        <div class="right-div">
-          <% if(isAuthenticated){ %>
-            <a href="/logout" class="btn btn-custom btn-logout">Logout</a>
-            <% } %>
-        </div>
-      </div>
-
-
-      <hr>
+<%- include('./partials/home-body-1') -%>
 
       <div class="courses-sec">
         <% courses.forEach(function(course){ %>
@@ -41,54 +10,17 @@
           </div>
         </a>
         <% }) %>
-
-
-
       </div>
 
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+      <script type="text/javascript">
+        $(function(){
+          if($(".courses-sec").children("a").length === 0){
+              //$('#course-ul').append('<p>No courses yet!</p>');
+              $('.courses-sec').append('<p>It seems like you have not enrolled in any courses yet,<a href="/manage-course">click here to enroll!</a></p>');
+            }
+        });
+      </script>
 
-      <div class="clearfix"></div>
-
-
-      <% if(usertype == 'student'){ %>
-        <ul>
-          <% teachers.forEach(function(teacher){ %>
-            <li><%= teacher.first_name %> teaches you <%= teacher.course_name %></li>
-          <% }) %>
-        </ul>
-      <% } %>
-      
-    </div>
-  </div>
-
-
-  </div>
-
-  </div>
-
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-
-  <script>
-    $(document).ready(function () {
-
-      function formatDate(date) {
-        var monthNames = [
-          "January", "February", "March",
-          "April", "May", "June", "July",
-          "August", "September", "October",
-          "November", "December"
-        ];
-
-        var day = date.getDate();
-        var monthIndex = date.getMonth();
-        var year = date.getFullYear();
-
-        return day + ' ' + monthNames[monthIndex] + ' ' + year;
-      }
-
-      $("#curr-date").html(formatDate(new Date()));
-    });
-  </script>
-
-  <%- include('footer') -%>
+  <%- include('./partials/home-body-2') -%>
