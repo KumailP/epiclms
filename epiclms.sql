@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.6.20, for Win32 (x86)
+-- MySQL dump 10.13  Distrib 5.7.21, for Win64 (x86_64)
 --
 -- Host: localhost    Database: epiclms
 -- ------------------------------------------------------
@@ -31,7 +31,7 @@ CREATE TABLE `course` (
   `dept_id` int(11) DEFAULT NULL,
   `faculty_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`course_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
-INSERT INTO `course` VALUES (1,'ITC','CS-101',3,4,1,1),(2,'AC','ME-102',3,4,2,NULL),(3,'PSCP','CS-102',3,2,1,NULL);
+INSERT INTO `course` VALUES (1,'Database Systems','CS-204',3,4,1,1),(2,'Operating Systems','CS-206',3,4,1,2),(3,'Theory of Computing','CS-208',3,4,1,3),(4,'Object Oriented Analysis & Design','CS-201',3,4,1,4),(5,'Probability & Statistics','MT-206',3,4,1,5),(6,'Programming Fundamentals','CS-102',3,1,1,6),(7,'Some Electrical Course','EE-123',2,4,3,7);
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -184,6 +184,31 @@ LOCK TABLES `faculty_course` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `sessions`
+--
+
+DROP TABLE IF EXISTS `sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sessions` (
+  `session_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `expires` int(11) unsigned NOT NULL,
+  `data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  PRIMARY KEY (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sessions`
+--
+
+LOCK TABLES `sessions` WRITE;
+/*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
+INSERT INTO `sessions` VALUES ('EGrcwU_Mm6a_rUGgR9tzxpWDZ6PdLxSq',1522617897,'{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"passport\":{\"user\":{\"user_id\":3,\"user_type\":\"student\"}}}');
+/*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `student`
 --
 
@@ -200,7 +225,7 @@ CREATE TABLE `student` (
   `photo` varchar(255) DEFAULT NULL,
   `semester` int(1) DEFAULT NULL,
   PRIMARY KEY (`student_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,7 +234,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (1,'Jahangir','Bashir','J@gmail.com','abcd\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',1,'ABC.jpg',4),(2,'Kumail','Pirzada','K@gmail.com','abcde\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',1,'ABC.jpg',4);
+INSERT INTO `student` VALUES (1,'Jahangir','Bashir','J@gmail.com','abcd\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',1,'ABC.jpg',4),(2,'Kumail','Pirzada','K@gmail.com','abcde\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',1,'ABC.jpg',4),(3,'Kumail','Pirzada','kumailpirzada@gmail.com','$2a$10$20sDucHPN3qq/6pw92GSo.KFhViyjxXD5moD5FhRTEefNHcHxSBhO',1,'default.jpg',4);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,7 +254,7 @@ CREATE TABLE `student_course` (
   KEY `course_id` (`course_id`),
   CONSTRAINT `student_course_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
   CONSTRAINT `student_course_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -250,4 +275,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-24 14:17:52
+-- Dump completed on 2018-04-01  2:25:12
