@@ -60,10 +60,12 @@ router.get('/', authenticationMiddleware(), function(req, res){
       db.query('SELECT * FROM course INNER JOIN student_course WHERE student_id = (?) AND student_course.course_id = course.course_id', [req.user.user_id], (err, results, fields) =>{
 
         var courses = results;
-
-        db.query('select faculty.first_name, course.course_name from ((faculty inner join course on faculty.faculty_id = course.faculty_id) inner join student on student.semester = course.semester) where student.student_id = (?)', [req.user.user_id], (err, results, fields) => {
+        //console.log(courses);
+        db.query('SELECT department_name FROM department WHERE department_id = (SELECT dept_id FROM student WHERE student_id = (?))', [req.user.user_id], (err, results, fields) =>{
+          var dept = results[0].department_name;
           
-          res.render('home', { title: 'Home', pic: pic, name: fname, usertype: req.user.user_type, courses: courses, teachers: results });
+          console.log(results);
+          res.render('home', { title: 'Home', pic: pic, name: fname, usertype: req.user.user_type, courses: courses, dept: dept, output: output });
         });
         
       });
@@ -258,4 +260,13 @@ function authenticationMiddleware () {
 	}
 }
 
+
+var month_names = new Array("January", "February", "March", 
+"April", "May", "June", "July", "August", "September", 
+"October", "November", "December");
+var d = new Date();
+var month = d.getMonth();
+var day = d.getDate();
+var output = (day<10? '0' : '') + day + " " + month_names[month] + ", " + d.getFullYear();
+//console.log(output);
 module.exports = router;
