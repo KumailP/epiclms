@@ -10,6 +10,17 @@
 
   </div>
 
+<script>
+  var month_names = new Array("January", "February", "March", 
+"April", "May", "June", "July", "August", "September", 
+"October", "November", "December");
+var d = new Date();
+var month = d.getMonth();
+var day = d.getDate();
+var output = (day<10? '0' : '') + day + " " + month_names[month] + ", " + d.getFullYear();
+$('#curr-date').html(output);
+//console.log(output);
+</script>
   
 
   <%- include('footer') -%>

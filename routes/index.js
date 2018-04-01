@@ -35,6 +35,7 @@ router.use( function( req, res, next ) {
 var currUserEmail = null;
 var currUserName = null;
 var currUserImage = null;
+var currUserDept = null;
 
 const upload = multer({
   storage: storage,
@@ -62,10 +63,10 @@ router.get('/', authenticationMiddleware(), function(req, res){
         var courses = results;
         //console.log(courses);
         db.query('SELECT department_name FROM department WHERE department_id = (SELECT dept_id FROM student WHERE student_id = (?))', [req.user.user_id], (err, results, fields) =>{
-          var dept = results[0].department_name;
+          currUserDept = results[0].department_name;
           
           console.log(results);
-          res.render('home', { title: 'Home', pic: pic, name: fname, usertype: req.user.user_type, courses: courses, dept: dept, output: output });
+          res.render('home', { title: 'Home', pic: pic, name: fname, usertype: req.user.user_type, courses: courses, dept: currUserDept });
         });
         
       });
@@ -219,7 +220,7 @@ router.get('/manage-course', authenticationMiddleware(), function(req, res){
       var courses = results;
       db.query('SELECT course_id, course_code, course_name from course inner join student on course.semester = student.semester AND course.dept_id = student.dept_id WHERE student.student_id = (?)', [req.user.user_id], function(err, results){
         if (err) throw err;
-        res.render('manage-course', { title: 'Courses', courses: courses, allcourses: results, pic: currUserImage, name: currUserName, usertype: req.user.user_type});
+        res.render('manage-course', { title: 'Courses', courses: courses, allcourses: results, pic: currUserImage, dept: currUserDept, name: currUserName, usertype: req.user.user_type});
       });
   });
 });
@@ -261,12 +262,12 @@ function authenticationMiddleware () {
 }
 
 
-var month_names = new Array("January", "February", "March", 
+/*var month_names = new Array("January", "February", "March", 
 "April", "May", "June", "July", "August", "September", 
 "October", "November", "December");
 var d = new Date();
 var month = d.getMonth();
 var day = d.getDate();
 var output = (day<10? '0' : '') + day + " " + month_names[month] + ", " + d.getFullYear();
-//console.log(output);
+console.log(output);*/
 module.exports = router;
