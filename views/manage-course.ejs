@@ -3,7 +3,7 @@
     <h2>Current Enrollments:</h2>
     <ul id="course-ul">
         <% courses.forEach(function(course){ %>
-            <li><%= course.course_code %> - <%= course.course_name %> <a href="/delete-course?courseid=<%= course.course_id %>&?_method=DELETE">X</a></li>
+            <li><%= course.course_code %> - <%= course.course_name %> <a href="/delete-course?courseid=<%= course.course_id %>&?_method=DELETE" id="course-dlt">X</a></li>
             <% }) %>
     </ul>
 
@@ -63,6 +63,7 @@
                 }else{
                     $("#course-warning").show();
                 }
+                
             });				
         });
     </script>

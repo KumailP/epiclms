@@ -63,7 +63,12 @@ router.use(function (req, res, next) {
 
         currUserImage = results[0].photo;
         currUserName = results[0].first_name;
-        next();
+        db.query('SELECT department_name FROM department WHERE department_id = (SELECT dept_id FROM faculty WHERE faculty_id = (?))', [req.user.user_id], (err, results, fields) => {
+          currUserDept = results[0].department_name;
+
+          //console.log(results);
+          next();
+        });
 
       });
     }
@@ -98,7 +103,7 @@ router.get('/', authenticationMiddleware(), function (req, res) {
 
   } else if (req.user.user_type == 'faculty') {
     db.query('select course_name, course_code from course inner join faculty on course.faculty_id = (?)', [req.user.user_id], (err, results, fields) => {
-      res.render('home', { title: 'Home', pic: currUserImage, name: currUserName, usertype: 'faculty', courses: results });
+      res.render('home', { title: 'Home', pic: currUserImage, name: currUserName, usertype: 'faculty', courses: results, dept: currUserDept });
 
     });
 
@@ -261,6 +266,9 @@ router.post('/enroll-course', authenticationMiddleware(), function (req, res) {
   });
 });
 
+
+
+
 passport.serializeUser(function (user_id, done) {
   done(null, user_id);
 });
@@ -274,17 +282,9 @@ function authenticationMiddleware() {
     // console.log(`req.session.passport.user: ${JSON.stringify(req.session.passport)}`);
 
     if (req.isAuthenticated()) return next();
-    res.redirect('/login')
+    res.redirect('/login');
   }
 }
 
 
-/*var month_names = new Array("January", "February", "March", 
-"April", "May", "June", "July", "August", "September", 
-"October", "November", "December");
-var d = new Date();
-var month = d.getMonth();
-var day = d.getDate();
-var output = (day<10? '0' : '') + day + " " + month_names[month] + ", " + d.getFullYear();
-console.log(output);*/
 module.exports = router;
