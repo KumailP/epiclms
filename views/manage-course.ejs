@@ -1,12 +1,18 @@
 <%- include('./partials/home-body-1') -%>
 
-    <h2>Current Enrollments:</h2>
+<% if(currUser.type == 'student'){ %>
+
+<div class="row">
+    <div class="col-4">
+<h2>Current Enrollments:</h2>
     <ul id="course-ul">
         <% courses.forEach(function(course){ %>
             <li><%= course.course_code %> - <%= course.course_name %> <a href="/delete-course?courseid=<%= course.course_id %>&?_method=DELETE" id="course-dlt">X</a></li>
             <% }) %>
     </ul>
+</div>
 
+    <div class="col-8 course-add">
     <h2>Add Course:</h2>
     <form action="" class="row">
         <select name="" id="course-select" class="form-control col-6">
@@ -21,6 +27,10 @@
         <div class="alert alert-danger" role="alert" id="course-warning">Already enrolled in course!</div>
         <div class="alert alert-success" role="alert" id="course-success">Successfully enrolled!</div>
     </div>
+</div>
+</div>    
+
+<% } %>
 
 
 
