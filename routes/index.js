@@ -130,11 +130,13 @@ router.post('/signup', function (req, res) {
 
   upload(req, res, (err) => { // upload function from multer called, upload img before anything
     
+    var pic = '';
     if (req.file == undefined)
-      var pic = 'default.jpg'; // if no pic then use default img
+      pic = 'default.jpg'; // if no pic then use default img
     else
-       varpic = req.file.filename; // else use selected pic
+      pic = req.file.filename; // else use selected pic
 
+    console.log(req.file);
 
     // constraints to check signup form
     req.checkBody('fname', 'First name cannot be empty').notEmpty();
