@@ -2,7 +2,7 @@
 
       <div class="courses-sec">
         <% courses.forEach(function(course){ %>
-        <a href="#" class="course-block">
+        <a href="/<%= course.course_code %>" class="course-block">
           <div>
             <%= course.course_name %>
             <br>

@@ -254,16 +254,17 @@ router.post('/enroll-course', authenticationMiddleware(), function (req, res) {
   });
 });
 
+//inside course view
 router.get('/:ccode', authenticationMiddleware(), function(req, res){
 
   const db = require('../db');
   var courseCode = req.params.ccode;
-  db.query('SELECT course_name FROM course WHERE course_id = (SELECT course_id from student_course WHERE student_id=(?) AND course_code=(?))', [req.user.user_id, courseCode], function(err, results) {
+  db.query('SELECT course_name FROM course WHERE course_id IN (SELECT course_id from student_course WHERE student_id=(?) AND course_code=(?))', [req.user.user_id, courseCode], function(err, results) {
     if(err) throw err;
     var cname = results[0].course_name;
     //console.log(results);
     
-    res.render('course_view', { title: 'Course Name', cname: cname });
+    res.render('course_view', { title: cname, cname: cname, currUser: currUser });
   });
 });
 
