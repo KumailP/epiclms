@@ -226,7 +226,7 @@ router.get('/manage-course', authenticationMiddleware(), function (req, res) {
   db.query('SELECT * FROM course INNER JOIN student_course WHERE student_id = (?) AND student_course.course_id = course.course_id', [req.user.user_id], function (err, results) {
     if (err) throw err;
     var courses = results;
-
+    
     // get all courses student is eligible for
     db.query('SELECT course_id, course_code, course_name from course inner join student on course.semester = student.semester AND course.dept_id = student.dept_id WHERE student.student_id = (?)', [req.user.user_id], function (err, results) {
       if (err) throw err;
@@ -254,7 +254,18 @@ router.post('/enroll-course', authenticationMiddleware(), function (req, res) {
   });
 });
 
+router.get('/:ccode', authenticationMiddleware(), function(req, res){
 
+  const db = require('../db');
+  var courseCode = req.params.ccode;
+  db.query('SELECT course_name FROM course WHERE course_id = (SELECT course_id from student_course WHERE student_id=(?) AND course_code=(?))', [req.user.user_id, courseCode], function(err, results) {
+    if(err) throw err;
+    var cname = results[0].course_name;
+    //console.log(results);
+    
+    res.render('course_view', { title: 'Course Name', cname: cname });
+  });
+});
 
 // part of passportjs middleware
 passport.serializeUser(function (user_id, done) {
