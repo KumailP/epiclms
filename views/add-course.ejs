@@ -1,0 +1,154 @@
+<%- include('./partials/home-body-1') -%>
+
+
+<div class="row">
+    <div class="col-6">
+<h2>All Courses</h2>
+<p><button class="btn btn-dark col-12" type="button" data-toggle="collapse" data-target="#cscollapse" aria-expanded="false" aria-controls="cscollapse">
+        Computer Science
+      </button></p>
+    <div class="collapse" id="cscollapse">
+        <ul id="course-ul"> 
+            <% if(allcourses.CS.length == 0){ %>
+                <p>No courses to show!</p>
+            <% }else{ %>
+            <% allcourses.CS.forEach(function(course){ %>
+                <li><%= course.course_name %></li>
+            <% })} %>
+        </ul>
+    </div>
+
+    <p><button class="btn btn-dark col-12" type="button" data-toggle="collapse" data-target="#mecollapse" aria-expanded="false" aria-controls="mecollapse">
+            Mechanical Engineering
+          </button></p>
+        <div class="collapse" id="mecollapse">
+            <ul id="course-ul"> 
+                <% if(allcourses.ME.length == 0){ %>
+                    <p>No courses to show!</p>
+                <% }else{ %>
+                <% allcourses.ME.forEach(function(course){ %>
+                    <li><%= course.course_name %></li>
+                <% })} %>
+            </ul>
+        </div>
+
+    <p><button class="btn btn-dark col-12" type="button" data-toggle="collapse" data-target="#eecollapse" aria-expanded="false" aria-controls="eecollapse">
+        Electrical Engineering
+      </button></p>
+    <div class="collapse" id="eecollapse">
+        <ul id="course-ul"> 
+            <% if(allcourses.EE.length == 0){ %>
+                <p>No courses to show!</p>
+            <% }else{ %>
+            <% allcourses.EE.forEach(function(course){ %>
+                <li><%= course.course_name %></li>
+            <% })} %>
+        </ul>
+    </div>
+
+    <p><button class="btn btn-dark col-12" type="button" data-toggle="collapse" data-target="#mscollapse" aria-expanded="false" aria-controls="mscollapse">
+        Management Sciences
+      </button></p>
+    <div class="collapse" id="mscollapse">
+        <ul id="course-ul"> 
+            <% if(allcourses.MS.length == 0){ %>
+                <p>No courses to show!</p>
+            <% }else{ %>
+            <% allcourses.MS.forEach(function(course){ %>
+                <li><%= course.course_name %></li>
+            <% })} %>
+        </ul>
+    </div>
+    
+</div>
+
+    <div class="col-6 course-add">
+    <h2>Add Course</h2>
+    <form action="/add-course" method="POST">
+        <input type="text" class="form-control" id="Course Name" aria-describedby="Course Name" placeholder="Course Name" name="cname">
+        <input type="text" class="form-control" id="Course Code" aria-describedby="Course Code" placeholder="Course Code" name="ccode">                    
+            
+                <label>Credit Hrs:</label>
+                <select name="chours" id="" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+
+                <label>Semester:</label>
+                <select name="semester" id="" class="form-control">
+                    <% for(var i=1; i<=8; i++){ %>
+                        <option value="<%= i %>"><%= i %></option>
+                    <% } %>
+                </select>
+
+                <label>Department:</label>
+                <select name="dept" class="form-control">
+                    
+                    <option value="1">Computer Science</option>
+                    <option value="2">Mechanical Engineering</option>
+                    <option value="3">Electrical Engineering</option>
+                    <option value="4">Management Sciences</option>
+                    
+                </select>
+            
+            <button type="submit" class="btn btn-custom" id="add-btn">Add</button>
+        </div>
+    
+    </form>
+    <br>
+    <div class="row">
+        <div class="alert alert-danger" role="alert" id="course-warning">Already enrolled in course!</div>
+        <div class="alert alert-success" role="alert" id="course-success">Successfully enrolled!</div>
+    </div>
+</div>
+</div>    
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(function(){		
+            $("#course-warning").hide();
+            $("#course-success").hide();
+            if($("#course-ul").children("li").length === 0){
+                $('#course-ul').append('<p>No courses yet!</p>');
+            }
+            $('#enroll-btn').click(function(e){                
+                $("#course-warning").hide();
+                $("#course-success").hide();
+                e.preventDefault();
+
+                var course = {};
+                course.info = $('#course-select').find(":selected").text();
+                course.id = $('#course-select').find(":selected").val();
+
+                if($('#course-ul li:contains('+course.info+')').length == 0){
+
+                    
+                    $.ajax({
+                        type: 'POST',
+                        data: JSON.stringify(course),
+                        contentType: 'application/json',
+                        url: 'http://localhost:3000/enroll-course',						
+                        success: function(course) {
+                            // console.log('success');
+                            // console.log(JSON.stringify(course));
+                            $("#course-ul").children("p").remove();
+                            $('#course-ul').append('<li>'+course.info+' <a href="/delete-course?courseid=' + course.id + '&?_method=DELETE">X</a></li>');
+                            $("#course-success").show();
+                        }
+                    });
+                }else{
+                    $("#course-warning").show();
+                }
+                
+            });				
+        });
+    </script>
+
+<%- include('./partials/home-body-2') -%>

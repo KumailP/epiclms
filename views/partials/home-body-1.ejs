@@ -10,14 +10,21 @@
 
         <div class="mid-div">
           <h1><%= currUser.fname %> <%= currUser.lname %></h1>
+          
           <div class="sub-div">
-          <h5><%= currUser.dept %></h5>
+          <h5><%= currUser.dept %><% if(currUser.type == 'faculty'){ %>
+            <span class="badge badge-pill badge-warning">Teacher Mode</span></h2>
+          <% } %></h5>
           <h5 id="curr-date"></h5>
         </div>
           <div class="inner-btns">
             <a href="/" class="btn btn-custom">Home</a>
             <a href="/manage-course" class="btn btn-custom">Manage Courses</a>
+            <% if(currUser.type == 'faculty'){ %>
+            <a href="/add-course" class="btn btn-custom">Add Course</a>
+            <% } %>
             <a href="#" class="btn btn-custom">People</a>
+            
           </div>
           <div class="clearfix"></div>
         </div>
@@ -26,8 +33,9 @@
         <div class="right-div">
           <% if(isAuthenticated){ %>
             <a href="/logout" class="btn btn-custom btn-logout">Logout</a>
-            <% } %>
+          <% } %>
         </div>
+        
       </div>
 
 

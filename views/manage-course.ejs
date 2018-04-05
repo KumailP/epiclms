@@ -30,6 +30,39 @@
 </div>
 </div>    
 
+<% }else{ %>
+
+    <div class="row">
+            <div class="col-4">
+        <h2>Currently teaching:</h2>
+            <ul id="course-ul">
+                <% courses.forEach(function(course){ %>
+                    <li><%= course.course_code %> - <%= course.course_name %> <a href="/delete-course?courseid=<%= course.course_id %>&?_method=DELETE" id="course-dlt">X</a></li>
+                <% }) %>
+            </ul>
+        </div>
+        
+            <div class="col-8 course-add">
+            <h2>Teach A Course:</h2>
+            <form action="" class="row">
+                <select name="" id="course-select" class="form-control col-6">
+                    <% allcourses.forEach(function(course){ %>
+                        <option value="<%= course.course_id %>"><%= course.course_code %> - <%= course.course_name %></option>
+                    <% }) %>
+                </select>
+                <button type="submit" class="btn btn-custom" id="enroll-btn">Add</button>
+            </form>
+            <br>
+            <div class="row">
+                <div class="alert alert-danger" role="alert" id="course-warning">Already teaching course!</div>
+                <div class="alert alert-success" role="alert" id="course-success">Successfully added!</div>
+            </div>
+
+
+            
+        </div>
+        </div>  
+
 <% } %>
 
 
@@ -64,7 +97,7 @@
                         url: 'http://localhost:3000/enroll-course',						
                         success: function(course) {
                             // console.log('success');
-                            // console.log(JSON.stringify(course));
+                            //console.log(JSON.stringify(course));
                             $("#course-ul").children("p").remove();
                             $('#course-ul').append('<li>'+course.info+' <a href="/delete-course?courseid=' + course.id + '&?_method=DELETE">X</a></li>');
                             $("#course-success").show();

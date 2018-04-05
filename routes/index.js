@@ -78,13 +78,11 @@ router.get('/', authenticationMiddleware(), function (req, res) {
   if (req.user.user_type == 'student') {
     db.query('SELECT * FROM course INNER JOIN student_course WHERE student_id = (?) AND student_course.course_id = course.course_id', [req.user.user_id], (err, results, fields) => {
 
-      var courses = results;
-      //console.log(courses);
-      res.render('home', { title: 'Home', currUser: currUser, courses: courses });
+      res.render('home', { title: 'Home', currUser: currUser, courses: results });
 
     });
   } else if (req.user.user_type == 'faculty') {
-    db.query('select course_name, course_code from course inner join faculty on course.faculty_id = (?)', [req.user.user_id], (err, results, fields) => {
+    db.query('SELECT * FROM course INNER JOIN faculty_course WHERE faculty_id = (?) AND faculty_course.course_id = course.course_id', [req.user.user_id], (err, results, fields) => {
       res.render('home', { title: 'Home', currUser: currUser, courses: results });
 
     });
@@ -221,27 +219,69 @@ router.post('/signup', function (req, res) {
 
 });
 
+router.get('/add-course', authenticationMiddleware(), function(req, res){
+
+  const db = require('../db');
+
+  var courses = {};
+  db.query('SELECT * FROM course WHERE dept_id = 1', (err, results) => {
+    if(err) throw err;
+    courses.CS = results;
+    db.query('SELECT * FROM course WHERE dept_id = 2', (err, results) => {
+      if(err) throw err;
+      courses.ME = results;
+      db.query('SELECT * FROM course WHERE dept_id = 3', (err, results) => {
+        if(err) throw err;
+        courses.EE = results;
+        db.query('SELECT * FROM course WHERE dept_id = 4', (err, results) => {
+          if(err) throw err;
+          courses.MS = results;
+          res.render('add-course', { title: 'Add Course', currUser: currUser, allcourses: courses});
+        });
+      });
+    });
+  });
+});
+
+router.post('/add-course', authenticationMiddleware(), function(req, res){
+  var cname = req.body.cname;
+  var ccode = req.body.ccode;
+  var chours = req.body.chours;
+  var semester = req.body.semester;
+  var dept = req.body.dept;
+
+  const db = require('../db');
+
+  db.query('INSERT INTO course(course_name, course_code, course_hours, semester, dept_id) VALUES((?), (?), (?), (?), (?))', [cname, ccode, chours, semester, dept], function(err, results){
+    if(err) throw err;
+    res.redirect('/add-course');
+  });
+});
+
 router.get('/manage-course', authenticationMiddleware(), function (req, res) {
     const db = require('../db');
 
-    // get enrolled courses of current student
-  db.query('SELECT * FROM course INNER JOIN student_course WHERE student_id = (?) AND student_course.course_id = course.course_id', [req.user.user_id], function (err, results) {
-    if (err) throw err;
-    var courses = results;
-    
-    // get all courses student is eligible for
-    db.query('SELECT course_id, course_code, course_name from course inner join student on course.semester = student.semester AND course.dept_id = student.dept_id WHERE student.student_id = (?)', [req.user.user_id], function (err, results) {
+      // get enrolled courses of current student
+    db.query('SELECT * FROM course INNER JOIN  ' + currUser.type + '_course WHERE  ' + currUser.type + '_id = (?) AND  ' + currUser.type + '_course.course_id = course.course_id', [req.user.user_id], function (err, results) {
       if (err) throw err;
-      res.render('manage-course', { title: 'Courses', courses: courses, allcourses: results, currUser: currUser });
+      var courses = results;
+      
+    // get all courses student is eligible for
+    var query = 'SELECT course_id, course_code, course_name from course inner join student on course.semester = student.semester AND course.dept_id = student.dept_id WHERE student.student_id = (?)';
+    if(currUser.type == 'faculty')
+      query = 'SELECT course_id, course_code, course_name from course inner join faculty on course.dept_id = faculty.dept_id WHERE faculty.faculty_id = (?)';
+      db.query(query, [req.user.user_id], function (err, results) {
+        if (err) throw err;
+        res.render('manage-course', { title: 'Courses', courses: courses, allcourses: results, currUser: currUser });
+      });
     });
-  });
 });
 
 router.get('/delete-course', authenticationMiddleware(), function (req, res) {
   const db = require('../db');
 
   // delete course from student_course to unenroll student
-  db.query('DELETE FROM student_course WHERE course_id = (?) AND student_id = (?)', [req.query.courseid, req.user.user_id], function (err, results) {
+  db.query('DELETE FROM ' + currUser.type + '_course WHERE course_id = (?) AND ' + currUser.type + '_id = (?)', [req.query.courseid, req.user.user_id], function (err, results) {
     res.redirect('/manage-course');
   });
 });
@@ -250,7 +290,8 @@ router.post('/enroll-course', authenticationMiddleware(), function (req, res) {
   
   // enroll student in course by adding course id to student_course table
   const db = require('../db');
-  db.query('INSERT INTO student_course (student_id, course_id) VALUES((?), (?))', [req.user.user_id, req.body.id], function (err, results) {
+
+  db.query('INSERT INTO  ' + currUser.type + '_course ( ' + currUser.type + '_id, course_id) VALUES((?), (?))', [req.user.user_id, req.body.id], function (err, results) {
     if (err) throw err;
     res.send(req.body);
   });
@@ -261,7 +302,7 @@ router.get('/:ccode', authenticationMiddleware(), function(req, res){
 
   const db = require('../db');
   var courseCode = req.params.ccode;
-  db.query('SELECT course_name FROM course WHERE course_id IN (SELECT course_id from student_course WHERE student_id=(?) AND course_code=(?))', [req.user.user_id, courseCode], function(err, results) {
+  db.query('SELECT course_name FROM course WHERE course_id IN (SELECT course_id from ' + currUser.type + '_course WHERE ' + currUser.type + '_id=(?) AND course_code=(?))', [req.user.user_id, courseCode], function(err, results) {
     
     if(results.length >= 1){
       var cname = results[0].course_name;
@@ -292,10 +333,6 @@ function authenticationMiddleware() {
     res.redirect('/login');
   }
 }
-
-// router.get('/404', function(req, res, next){
-//   res.render('404', { title: '404', currUser: currUser });
-// });
 
 
 
