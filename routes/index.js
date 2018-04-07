@@ -302,13 +302,17 @@ router.get('/:ccode', authenticationMiddleware(), function(req, res){
 
   const db = require('../db');
   var courseCode = req.params.ccode;
-  db.query('SELECT course_name FROM course WHERE course_id IN (SELECT course_id from ' + currUser.type + '_course WHERE ' + currUser.type + '_id=(?) AND course_code=(?))', [req.user.user_id, courseCode], function(err, results) {
+  db.query('SELECT course_name, course_id FROM course WHERE course_id IN (SELECT course_id from ' + currUser.type + '_course WHERE ' + currUser.type + '_id=(?) AND course_code=(?))', [req.user.user_id, courseCode], function(err, results) {
     
     if(results.length >= 1){
       var cname = results[0].course_name;
+      var courseid = results[0].course_id;
       //console.log(results);
+      db.query('SELECT * FROM course_data WHERE course_id = (?)', [courseid], (err, results) => {
+        console.log(results);
+        res.render('course_view', { title: cname, cname: cname, currUser: currUser, cdata: results });
+      });
       
-      res.render('course_view', { title: cname, cname: cname, currUser: currUser });
     }else{
       res.render('404', { title: '404', currUser: currUser });
     }

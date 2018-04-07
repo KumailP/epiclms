@@ -2,4 +2,12 @@
 <%- include('./partials/home-body-1') -%>
 <h2><%= cname %></h2>
 
+<h3>Resources:</h3>
+<ul>
+    <% cdata.forEach(function(data){ %>
+        <li><a href="/<%= data.file_title %>"><%= data.file_title %></a> -- <%= data.date_uploaded %></li>
+    <% }); %>
+    
+</ul>
+
 <%- include('./partials/home-body-2') -%>

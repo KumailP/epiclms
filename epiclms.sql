@@ -29,9 +29,8 @@ CREATE TABLE `course` (
   `course_hours` int(11) DEFAULT NULL,
   `semester` int(11) DEFAULT NULL,
   `dept_id` int(11) DEFAULT NULL,
-  `faculty_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`course_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +39,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
-INSERT INTO `course` VALUES (1,'Database Systems','CS-204',3,4,1,1),(2,'Operating Systems','CS-206',3,4,1,2),(3,'Theory of Computing','CS-208',3,4,1,3),(4,'Object Oriented Analysis & Design','CS-201',3,4,1,4),(5,'Probability & Statistics','MT-206',3,4,1,5),(6,'Programming Fundamentals','CS-102',3,1,1,6),(7,'Some Electrical Course','EE-123',2,4,3,7);
+INSERT INTO `course` VALUES (1,'Database Systems','CS-204',3,4,1),(2,'Operating Systems','CS-206',3,4,1),(3,'Theory of Computing','CS-208',3,4,1),(4,'Object Oriented Analysis & Design','CS-201',3,4,1),(5,'Probability & Statistics','MT-206',3,4,1),(6,'Programming Fundamentals','CS-102',3,1,1),(7,'Some Electrical Course','EE-123',2,4,3),(8,'Digital Logic Design','EE-456',2,2,1),(9,'Entrepreneurship','MS-092',2,2,4);
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,13 +55,14 @@ CREATE TABLE `course_data` (
   `course_id` int(11) DEFAULT NULL,
   `faculty_id` int(11) DEFAULT NULL,
   `file_name` varchar(50) DEFAULT NULL,
-  `date_uploaded` datetime DEFAULT NULL,
+  `date_uploaded` date DEFAULT NULL,
+  `file_title` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `course_id` (`course_id`),
   KEY `faculty_id` (`faculty_id`),
   CONSTRAINT `course_data_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`),
   CONSTRAINT `course_data_ibfk_2` FOREIGN KEY (`faculty_id`) REFERENCES `faculty` (`faculty_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,6 +71,7 @@ CREATE TABLE `course_data` (
 
 LOCK TABLES `course_data` WRITE;
 /*!40000 ALTER TABLE `course_data` DISABLE KEYS */;
+INSERT INTO `course_data` VALUES (1,1,3,'ABCFILE.jpg','2018-04-07','Lecture 04');
 /*!40000 ALTER TABLE `course_data` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +95,7 @@ CREATE TABLE `department` (
 
 LOCK TABLES `department` WRITE;
 /*!40000 ALTER TABLE `department` DISABLE KEYS */;
-INSERT INTO `department` VALUES (1,'BSCS');
+INSERT INTO `department` VALUES (1,'Computer Science'),(2,'Mechanical Engineering'),(3,'Electrical Engineering'),(4,'Management Sciences');
 /*!40000 ALTER TABLE `department` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,7 +143,7 @@ CREATE TABLE `faculty` (
   `dept_id` int(11) DEFAULT NULL,
   `photo` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`faculty_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,7 +152,7 @@ CREATE TABLE `faculty` (
 
 LOCK TABLES `faculty` WRITE;
 /*!40000 ALTER TABLE `faculty` DISABLE KEYS */;
-INSERT INTO `faculty` VALUES (1,'Khubaib','Ahmed','Khu@gmail.com','abcd1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',1,'k.jpg');
+INSERT INTO `faculty` VALUES (3,'Shayan','Mustafa','shayanmustafa@gmail.com','$2a$10$TaqpL6vvC8s3BPs.cocd.O0Xx0GllE85HPOQM3SD.A1JFJ7ncUzXu',1,'pic-1522952796427.png');
 /*!40000 ALTER TABLE `faculty` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,7 +172,7 @@ CREATE TABLE `faculty_course` (
   KEY `course_id` (`course_id`),
   CONSTRAINT `faculty_course_ibfk_1` FOREIGN KEY (`faculty_id`) REFERENCES `faculty` (`faculty_id`),
   CONSTRAINT `faculty_course_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,6 +181,7 @@ CREATE TABLE `faculty_course` (
 
 LOCK TABLES `faculty_course` WRITE;
 /*!40000 ALTER TABLE `faculty_course` DISABLE KEYS */;
+INSERT INTO `faculty_course` VALUES (8,3,1),(9,3,2);
 /*!40000 ALTER TABLE `faculty_course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -204,7 +206,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('EGrcwU_Mm6a_rUGgR9tzxpWDZ6PdLxSq',1522617897,'{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"passport\":{\"user\":{\"user_id\":3,\"user_type\":\"student\"}}}');
+INSERT INTO `sessions` VALUES ('9eDAFCz1iy4gDPbO_l9bYg8TReQU-ZTi',1523193681,'{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"passport\":{\"user\":{\"user_id\":3,\"user_type\":\"faculty\"}}}');
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -224,8 +226,9 @@ CREATE TABLE `student` (
   `dept_id` int(2) DEFAULT NULL,
   `photo` varchar(255) DEFAULT NULL,
   `semester` int(1) DEFAULT NULL,
-  PRIMARY KEY (`student_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`student_id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -234,7 +237,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (1,'Jahangir','Bashir','J@gmail.com','abcd\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',1,'ABC.jpg',4),(2,'Kumail','Pirzada','K@gmail.com','abcde\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',1,'ABC.jpg',4),(3,'Kumail','Pirzada','kumailpirzada@gmail.com','$2a$10$20sDucHPN3qq/6pw92GSo.KFhViyjxXD5moD5FhRTEefNHcHxSBhO',1,'default.jpg',4);
+INSERT INTO `student` VALUES (18,'Kumail','Pirzada','kumailpirzada@gmail.com','$2a$10$rRBhKsDcZxzMdp1p8SWgK.nGLRdqsaylQ8fOxnflTxSxLItJ4ZgA.',1,'pic-1522779248735.jpg',4);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -254,7 +257,7 @@ CREATE TABLE `student_course` (
   KEY `course_id` (`course_id`),
   CONSTRAINT `student_course_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
   CONSTRAINT `student_course_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -263,6 +266,7 @@ CREATE TABLE `student_course` (
 
 LOCK TABLES `student_course` WRITE;
 /*!40000 ALTER TABLE `student_course` DISABLE KEYS */;
+INSERT INTO `student_course` VALUES (19,18,3),(21,18,1),(24,18,4);
 /*!40000 ALTER TABLE `student_course` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -275,4 +279,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-01  2:25:12
+-- Dump completed on 2018-04-07 19:13:07
