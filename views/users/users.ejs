@@ -2,7 +2,7 @@
 
 
   
-  <h3>Students of Computer Science - Semester 4:</h3>
+  <h3>Students of <%= dept %> - Semester <%= currUser.semester %>:</h3>
   <ul>
     <% users.forEach(function(user){ %>
       <li><a href="/users/<%= user.student_id %>"><%= user.full_name %></a></li>

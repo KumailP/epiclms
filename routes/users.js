@@ -15,7 +15,11 @@ router.get('/', authenticationMiddleware(), (req, res, next) => {
 
   db.query('select student_id, CONCAT(first_name, " ", last_name) AS full_name from student where dept_id = (SELECT dept_id from student where student_id=(?)) AND semester = (SELECT semester from student where student_id = (?))', [req.user.user_id, req.user.user_id], function(err, results){
     if(err) throw err;
-    res.render('users/users', {title: 'Users', currUser: currUser, users: results});
+    var users = results;
+    db.query('SELECT department_name from department WHERE department_id = (SELECT dept_id FROM student where student_id = (?))', [req.user.user_id], (err, results) => {
+      var dept = results[0].department_name;
+      res.render('users/users', {title: 'Users', currUser: currUser, users: users, dept: dept });
+    });
   });
 });
 
