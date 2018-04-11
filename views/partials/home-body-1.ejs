@@ -4,7 +4,7 @@
 
       <div class="row">
         <div class="left-div">
-          <img src="displaypics/<%= currUser.image %>" alt="display picture" class="profpic">
+          <img src="../displaypics/<%= currUser.image %>" alt="display picture" class="profpic">
         </div>
 
 
@@ -23,7 +23,7 @@
             <% if(currUser.type == 'faculty'){ %>
             <a href="/add-course" class="btn btn-custom">Add Course</a>
             <% } %>
-            <a href="#" class="btn btn-custom">People</a>
+            <a href="/users" class="btn btn-custom">People</a>
             
           </div>
           <div class="clearfix"></div>

@@ -1,0 +1,19 @@
+<%- include('../partials/home-body-1') -%>
+
+
+  
+  <h3>Students of Computer Science - Semester 4:</h3>
+  <ul>
+    <% users.forEach(function(user){ %>
+      <li><a href="/users/<%= user.student_id %>"><%= user.full_name %></a></li>
+    <% }) %>
+  </ul>
+      
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    
+  </script>
+
+  <%- include('../partials/home-body-2') -%>

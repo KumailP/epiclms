@@ -1,0 +1,28 @@
+<%- include('../partials/home-body-1') -%>
+
+<link rel='stylesheet' href='/stylesheets/users.css' />
+  
+<div class="user-display">
+  <img src="../displaypics/<%= user_info.photo %>" alt="">  
+  <h3><%= user_info.name %></h3>
+  <ul>
+    <li>Department: <%= user_info.dept_id %></li>
+    <li>Semester: <%= user_info.semester %></li>
+    <li>Contact: <%= user_info.email %></li>
+  </ul>
+  <h5>Enrolled in the following courses:</h5>
+  <ul>
+    <% courses.forEach(function(course){ %>
+      <li><%= course.course_code %> - <%= course.course_name %></li>
+    <% }) %>
+  </ul>
+</div>
+      
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    
+  </script>
+
+  <%- include('../partials/home-body-2') -%>

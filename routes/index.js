@@ -43,18 +43,20 @@ router.use(function (req, res, next) {
 });
 
 // custom middleware that collects user info and saves to global object currUser
+
 router.use(function (req, res, next) {
   if (req.isAuthenticated()) { // only collect user info if logged in
     const db = require('../db.js'); // connect to db
     
     currUser.type = req.user.user_type; // save user type in global obj (student/faculty)
 
-    db.query('SELECT first_name, last_name, photo FROM ' + currUser.type + ' WHERE ' + currUser.type + '_id = (?)', [req.user.user_id], (err, results, fields) => {
+    db.query('SELECT first_name, last_name, photo, email FROM ' + currUser.type + ' WHERE ' + currUser.type + '_id = (?)', [req.user.user_id], (err, results, fields) => {
       if (err) throw err;
       // save user info into global obj
       currUser.image = results[0].photo;
       currUser.fname = results[0].first_name;
       currUser.lname = results[0].last_name;
+      currUser.email = results[0].email;
     });
     // save dept of user in global obj
     db.query('SELECT department_name FROM department WHERE department_id = (SELECT dept_id FROM ' + currUser.type + ' WHERE ' + currUser.type + '_id = (?))', [req.user.user_id], (err, results, fields) => {
@@ -341,3 +343,5 @@ function authenticationMiddleware() {
 
 
 module.exports = router;
+module.exports.currUser = currUser;
+
