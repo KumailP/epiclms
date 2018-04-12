@@ -51,20 +51,31 @@ router.use(function (req, res, next) {
     
     currUser.type = req.user.user_type; // save user type in global obj (student/faculty)
 
-    db.query('SELECT first_name, last_name, photo, email, semester FROM ' + currUser.type + ' WHERE ' + currUser.type + '_id = (?)', [req.user.user_id], (err, results, fields) => {
+    var query = '';
+    if(currUser.type == 'student'){
+      query = 'SELECT first_name, last_name, photo, email, semester FROM student WHERE student_id = (?)';
+    }else{
+      query = 'SELECT first_name, last_name, photo, email FROM faculty WHERE faculty_id = (?)';
+    }
+
+    db.query(query, [req.user.user_id], (err, results, fields) => {
       if (err) throw err;
       // save user info into global obj
+      
       currUser.image = results[0].photo;
       currUser.fname = results[0].first_name;
       currUser.lname = results[0].last_name;
       currUser.email = results[0].email;
-      currUser.semester = results[0].semester;
+      if(currUser.type == 'student'){
+        currUser.semester = results[0].semester;
+      }
     });
     // save dept of user in global obj
     db.query('SELECT department_name FROM department WHERE department_id = (SELECT dept_id FROM ' + currUser.type + ' WHERE ' + currUser.type + '_id = (?))', [req.user.user_id], (err, results, fields) => {
       currUser.dept = results[0].department_name;
     });
   }
+  console.log(currUser);
   next(); // go to the next middleware/function
 });
 

@@ -23,8 +23,9 @@
             <% if(currUser.type == 'faculty'){ %>
             <a href="/add-course" class="btn btn-custom">Add Course</a>
             <% } %>
+            <% if(currUser.type == 'student'){ %>
             <a href="/users" class="btn btn-custom">People</a>
-            
+            <% } %>
           </div>
           <div class="clearfix"></div>
         </div>
