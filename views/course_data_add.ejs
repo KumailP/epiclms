@@ -1,0 +1,69 @@
+
+<%- include('./partials/home-body-1') -%>
+<h2><%= cname %></h2>
+
+<div class="col-6 course-add">
+    <h2>Add Course Data</h2>
+    <form action="/add-course-data/<%= cid %>" method="POST" enctype="multipart/form-data">
+        <input type="text" class="form-control" id="File Title" aria-describedby="File Title" placeholder="Title" name="file_title">
+        <textarea class="form-control" id="Description" aria-describedby="Description" placeholder="Description" name="description"></textarea>                 
+            
+        <br>
+
+        <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-file">
+                        Upload File
+                        <input type="file" id="pdf" name="pdf">
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly>
+            </div>
+
+        <br>
+                    
+        <button type="submit" class="btn btn-custom" id="add-btn">Add</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+<script>
+        $(document).ready(function () {
+            $(document).on('change', '.btn-file :file', function () {
+                var input = $(this),
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                input.trigger('fileselect', [label]);
+            });
+
+            $('.btn-file :file').on('fileselect', function (event, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = label;
+
+                if (input.length) {
+                    input.val(log);
+                } else {
+                    if (log) alert(log);
+                }
+
+            });
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#img-upload').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#imgInp").change(function () {
+                readURL(this);
+            });
+        });
+</script>
+
+<%- include('./partials/home-body-2') -%>

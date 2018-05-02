@@ -17,7 +17,7 @@
     <form action="" class="row">
         <select name="" id="course-select" class="form-control col-6">
             <% allcourses.forEach(function(course){ %>
-                <option value="<%= course.course_id %>"><%= course.course_code %> - <%= course.course_name %></option>
+                <option value="<%= course['course_id'] %>"><li><%= course['Course Code'] %> - <%= course['Course Name'] %></option>
             <% }) %>
         </select>
         <button type="submit" class="btn btn-custom" id="enroll-btn">Enroll</button>
@@ -47,7 +47,7 @@
             <form action="" class="row">
                 <select name="" id="course-select" class="form-control col-6">
                     <% allcourses.forEach(function(course){ %>
-                        <option value="<%= course.course_id %>"><%= course.course_code %> - <%= course.course_name %></option>
+                        <option value="<%= course['course_id'] %>"><%= course['Course Code'] %> - <%= course['Course Name'] %></option>
                     <% }) %>
                 </select>
                 <button type="submit" class="btn btn-custom" id="enroll-btn">Add</button>

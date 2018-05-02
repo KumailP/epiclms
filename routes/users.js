@@ -42,7 +42,7 @@ router.get('/:user_id', authenticationMiddleware(), (req, res, next) => {
       user_info.dept = results[0].department_name;
       db.query('select course_name, course_code from course where course_id in (select course_id from student_course where student_id = (?))', [req.params.user_id], (err, results) => {
         var courses = results;
-        res.render('users/profile', {title: 'Shayan Mustafa', currUser: currUser, user_info: user_info, courses:courses});
+        res.render('users/profile', {title: user_info.name, currUser: currUser, user_info: user_info, courses:courses});
       });
     });
   });

@@ -1,0 +1,11 @@
+
+<%- include('./partials/home-body-1') -%>
+<h2><%= cname %></h2>
+
+<h3><%= data.file_title %></h3>
+<p>Uploaded by <%= data.faculty_name %> on <%= data.date_uploaded %></p>
+<p><%= data.description %></p>
+<p>File attached: <a href="/course-data/<%= data.file_name %>"><%= data.file_name %></a></p>
+
+
+<%- include('./partials/home-body-2') -%>

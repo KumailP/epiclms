@@ -11,10 +11,30 @@ var router = express.Router();
 const storage = multer.diskStorage({
   destination: './public/displaypics',
   filename: function (req, file, cb) {
+    console.log("UPLOADED IMG");
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-
   }
 });
+
+const storagePdf = multer.diskStorage({
+  destination: './public/course-data',
+  filename: function (req, file, cb) {
+    console.log("UPLOADED PDF");
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+// part of image uploading middleware
+
+const uploadPdf = multer({
+  storage: storagePdf,
+}).single('pdf');
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 }
+}).single('pic');
+
 
 // global object containing current user's info
 var currUser = {
@@ -75,15 +95,9 @@ router.use(function (req, res, next) {
       currUser.dept = results[0].department_name;
     });
   }
-  console.log(currUser);
   next(); // go to the next middleware/function
 });
 
-// part of image uploading middleware
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 1000000 }
-}).single('pic');
 
 // route to homepage
 router.get('/', authenticationMiddleware(), function (req, res) {
@@ -282,12 +296,15 @@ router.get('/manage-course', authenticationMiddleware(), function (req, res) {
       var courses = results;
       
     // get all courses student is eligible for
-    var query = 'SELECT course_id, course_code, course_name from course inner join student on course.semester = student.semester AND course.dept_id = student.dept_id WHERE student.student_id = (?)';
-    if(currUser.type == 'faculty')
-      query = 'SELECT course_id, course_code, course_name from course inner join faculty on course.dept_id = faculty.dept_id WHERE faculty.faculty_id = (?)';
-      db.query(query, [req.user.user_id], function (err, results) {
-        if (err) throw err;
-        res.render('manage-course', { title: 'Courses', courses: courses, allcourses: results, currUser: currUser });
+    //var query = 'SELECT course_id, course_code, course_name from course inner join student on course.semester = student.semester AND course.dept_id = student.dept_id WHERE student.student_id = (?)';
+    var query = 'CALL getAvailableCourses(' + req.user.user_id + ', 1)';
+    if(currUser.type == 'faculty'){
+      var query = 'CALL getAvailableCourses(' + req.user.user_id + ', 2)';
+    }
+    db.query(query, [req.user.user_id], function (err, results) {
+      if (err) throw err;
+        console.log("manage-courses: " + results[0][0]['Course Name']);
+        res.render('manage-course', { title: 'Courses', courses: courses, allcourses: results[0], currUser: currUser });
       });
     });
 });
@@ -324,8 +341,86 @@ router.get('/:ccode', authenticationMiddleware(), function(req, res){
       var courseid = results[0].course_id;
       //console.log(results);
       db.query('SELECT * FROM course_data WHERE course_id = (?)', [courseid], (err, results) => {
-        console.log(results);
-        res.render('course_view', { title: cname, cname: cname, currUser: currUser, cdata: results });
+        //console.log(results);
+        var courseData = results;
+        courseData.forEach(x => {
+          x.date_uploaded = x.date_uploaded.getDate() + '/' + x.date_uploaded.getMonth() + '/' + x.date_uploaded.getFullYear();
+        });
+        
+        res.render('course_view', { title: cname, cname: cname, currUser: currUser, cdata: courseData, ccode: courseCode });
+      });
+      
+    }else{
+      res.render('404', { title: '404', currUser: currUser });
+    }
+  });
+});
+
+
+router.get('/:ccode/add-new', authenticationMiddleware(), (req, res) => {
+  const db = require('../db');
+  var courseCode = req.params.ccode;
+  db.query('SELECT course_name, course_id FROM course WHERE course_id IN (SELECT course_id from ' + currUser.type + '_course WHERE ' + currUser.type + '_id=(?) AND course_code=(?))', [req.user.user_id, courseCode], function(err, results) {
+    
+    if(results.length >= 1){
+      var cname = results[0].course_name;
+      var courseid = results[0].course_id;
+      
+      res.render('course_data_add', { title: courseCode + ' - Add New', cname: cname, cid: courseid, currUser: currUser });
+      
+    }else{
+      res.render('404', { title: '404', currUser: currUser });
+    }
+  });
+});
+
+router.post('/add-course-data/:cid', authenticationMiddleware(), uploadPdf, (req, res) => {
+  if(req.file){
+    req.body.filename = req.file.filename;
+  }else{
+    req.body.filename = null;
+  }
+  
+  const db = require('../db');
+  var cid = req.params.cid;
+  db.query('SELECT course_name, course_code FROM course WHERE course_id = (?)', [cid], function(err, results) {
+    
+    if(results.length >= 1){
+
+      var cname = results[0].course_name;
+      var ccode = results[0].course_code;
+        db.query('insert into course_data (course_id, faculty_id, file_name, date_uploaded, file_title, description) VALUES ((?), (?), (?), NOW(), (?), (?));', [cid, req.user.user_id, req.body.filename, req.body.file_title, req.body.description], (err, results) => {
+          if(err) throw err;
+          res.redirect('/' + ccode);
+        });
+      
+        
+        
+      
+    }else{
+      res.render('404', { title: '404', currUser: currUser });
+    }
+  });
+});
+
+
+router.get('/:ccode/:id', authenticationMiddleware(), (req, res) => {
+  const db = require('../db');
+  var courseCode = req.params.ccode;
+  db.query('SELECT course_name, course_id FROM course WHERE course_id IN (SELECT course_id from ' + currUser.type + '_course WHERE ' + currUser.type + '_id=(?) AND course_code=(?))', [req.user.user_id, courseCode], function(err, results) {
+    
+    if(results.length >= 1){
+      var cname = results[0].course_name;
+      var courseid = results[0].course_id;
+      db.query('SELECT * FROM course_data WHERE id = (?)', [req.params.id], (err, results) => {
+        
+          console.log("COURSE DATA: " + results);
+          var courseData = results[0];
+          db.query('SELECT CONCAT(first_name, " ", last_name) AS full_name FROM faculty where faculty_id = (?)', courseData.faculty_id, (err, results) =>{
+            courseData.faculty_name = results[0].full_name;
+            courseData.date_uploaded = courseData.date_uploaded.getDate() + '/' + courseData.date_uploaded.getMonth() + '/' + courseData.date_uploaded.getFullYear();
+            res.render('course_data_view', {title: courseCode + " - " + courseData.file_title, currUser: currUser, cname: cname, data: courseData });              
+          });
       });
       
     }else{

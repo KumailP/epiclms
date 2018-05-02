@@ -2,10 +2,13 @@
 <%- include('./partials/home-body-1') -%>
 <h2><%= cname %></h2>
 
-<h3>Resources:</h3>
+<h3 class="col-mr-auto">Resources:</h3>
+<% if(currUser.type == 'faculty'){ %>
+<a href="/<%= ccode %>/add-new" class="btn btn-custom">Add New</a>
+<% } %>
 <ul>
     <% cdata.forEach(function(data){ %>
-        <li><a href="/<%= data.file_title %>"><%= data.file_title %></a> -- <%= data.date_uploaded %></li>
+        <li><a href="/<%= ccode %>/<%= data.id %>"><%= data.file_title %></a> -- <%= data.date_uploaded %></li>
     <% }); %>
     
 </ul>
